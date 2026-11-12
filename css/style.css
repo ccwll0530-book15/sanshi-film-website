@@ -1,0 +1,594 @@
+/* =====================================================
+   三氏影視｜網站樣式
+   顏色主要在最上方的 :root 修改，方便初學者管理。
+   ===================================================== */
+:root {
+  --color-black: #050505;
+  --color-deep: #101010;
+  --color-panel: #151515;
+  --color-white: #ffffff;
+  --color-silver: #d9d9d9;
+  --color-gray: #777777;
+  --color-line: rgba(255, 255, 255, 0.15);
+  --content-width: 1180px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+body {
+  margin: 0;
+  background: var(--color-black);
+  color: var(--color-white);
+  font-family: "Microsoft JhengHei", "Noto Sans TC", Arial, sans-serif;
+  line-height: 1.7;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; }
+
+/* 頁首與導覽列 */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 88px;
+  padding: 12px max(5vw, calc((100vw - var(--content-width)) / 2));
+  background: rgba(5, 5, 5, 0.94);
+  border-bottom: 1px solid var(--color-line);
+  backdrop-filter: blur(14px);
+}
+.brand { display: inline-flex; align-items: center; width: 190px; }
+.brand img { display: block; width: 100%; height: auto; }
+.main-nav { display: flex; align-items: center; gap: 34px; }
+.main-nav a { color: var(--color-silver); font-size: 13px; letter-spacing: 0.12em; transition: color .2s ease; }
+.main-nav a:hover { color: var(--color-white); }
+.main-nav .nav-contact { padding: 9px 18px; border: 1px solid rgba(255,255,255,.55); color: var(--color-white); }
+.menu-toggle { display: none; }
+
+/* 首頁主視覺 */
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  align-items: center;
+  gap: 4vw;
+  min-height: 690px;
+  padding: 88px max(7vw, calc((100vw - var(--content-width)) / 2)) 105px;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 78% 48%, rgba(255,255,255,.09), transparent 34%), linear-gradient(110deg, #050505 0%, #080808 60%, #111 100%);
+}
+.hero::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .13; background-image: linear-gradient(90deg, transparent 49.8%, rgba(255,255,255,.18) 50%, transparent 50.2%); background-size: 110px 100%; }
+.hero-copy, .hero-art { position: relative; z-index: 1; }
+.eyebrow, .section-kicker { margin: 0 0 22px; color: var(--color-silver); font-size: 11px; letter-spacing: .22em; }
+.eyebrow { display: flex; align-items: center; gap: 12px; }
+.eyebrow-line { width: 34px; height: 1px; background: var(--color-white); }
+.hero h1 { margin: 0; font-size: clamp(42px, 5.5vw, 68px); line-height: 1.26; letter-spacing: .045em; font-weight: 800; }
+.hero h1 span { color: var(--color-silver); }
+.hero-description { margin: 25px 0 30px; color: #aaa; font-size: 14px; line-height: 2.1; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.button { display: inline-flex; align-items: center; justify-content: center; gap: 15px; min-height: 48px; padding: 0 22px; font-size: 12px; letter-spacing: .1em; transition: transform .2s ease, background .2s ease, color .2s ease; }
+.button:hover { transform: translateY(-3px); }
+.button-light { background: var(--color-white); color: var(--color-black); }
+.button-light:hover { background: var(--color-silver); }
+.button-outline { border: 1px solid rgba(255,255,255,.45); color: var(--color-white); }
+.button-outline:hover { background: rgba(255,255,255,.1); }
+.hero-note { margin: 42px 0 0; color: #777; font-size: 10px; letter-spacing: .17em; }
+.hero-index { position: absolute; right: 5vw; bottom: 28px; color: #666; font-size: 10px; letter-spacing: .2em; }
+
+/* 以 CSS 製作的電影畫面裝飾，不依賴外部圖片 */
+.hero-art { min-height: 420px; display: grid; place-items: center; }
+.art-glow { position: absolute; width: 75%; aspect-ratio: 1; border-radius: 50%; background: rgba(255,255,255,.11); filter: blur(80px); }
+.art-frame { position: absolute; width: min(82%, 420px); aspect-ratio: .83; border: 1px solid rgba(255,255,255,.55); }
+.art-frame-back { transform: rotate(9deg) translate(22px, 5px); opacity: .4; }
+.art-frame-front { display: flex; flex-direction: column; justify-content: space-between; padding: 22px; background: linear-gradient(145deg, rgba(255,255,255,.1), rgba(20,20,20,.2) 45%, rgba(255,255,255,.04)); box-shadow: 0 25px 80px rgba(0,0,0,.55); }
+.frame-topline, .frame-bottomline { display: flex; justify-content: space-between; color: #aaa; font-size: 8px; letter-spacing: .16em; }
+.frame-mark {width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.frame-mark img {
+  display: block;
+  width: min(72%, 300px);
+  max-height: 130px;
+  height: auto;
+  object-fit: contain;
+}
+.frame-bottomline { color: #ddd; }
+.art-caption { position: absolute; bottom: 0; right: 0; color: #777; font-size: 8px; letter-spacing: .2em; writing-mode: vertical-rl; }
+
+/* 共用內容區 */
+.section { max-width: var(--content-width); margin: 0 auto; padding: 112px 30px; }
+.section-heading { margin-bottom: 48px; }
+.section-heading h2 { margin: 0; font-size: clamp(30px, 4vw, 44px); letter-spacing: .08em; }
+.section-kicker { margin-bottom: 12px; }
+.about-section { display: grid; grid-template-columns: .8fr 1.2fr; gap: 8vw; border-bottom: 1px solid var(--color-line); }
+.about-content { padding-top: 27px; }
+.about-lead { margin: 0 0 18px; font-size: clamp(23px, 3vw, 34px); letter-spacing: .06em; }
+.about-text { max-width: 610px; margin: 0; color: #999; font-size: 14px; line-height: 2.2; }
+.section-heading-row { display: flex; align-items: end; justify-content: space-between; gap: 24px; }
+.section-side-note, .works-label { margin: 0 0 6px; color: #888; font-size: 11px; letter-spacing: .12em; }
+.services-section { padding-bottom: 105px; }
+.service-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.service-card { position: relative; min-height: 280px; padding: 29px; background: linear-gradient(145deg, #171717, #0d0d0d); border: 1px solid var(--color-line); transition: transform .25s ease, border-color .25s ease; }
+.service-card:hover { transform: translateY(-6px); border-color: rgba(255,255,255,.5); }
+.card-number { color: #777; font-size: 10px; letter-spacing: .15em; }
+.service-symbol { margin: 25px 0 16px; color: #ddd; font-size: 27px; }
+.service-card h3 { margin: 0 0 9px; font-size: 20px; letter-spacing: .08em; }
+.service-card p { min-height: 52px; margin: 0; color: #888; font-size: 12px; line-height: 1.9; }
+.card-en { display: inline-block; margin-top: 24px; color: #666; font-size: 8px; letter-spacing: .18em; }
+.content-note { margin: 18px 0 0; color: #686868; font-size: 10px; }
+.works-section { max-width: none; padding-right: max(30px, calc((100vw - var(--content-width)) / 2)); padding-left: max(30px, calc((100vw - var(--content-width)) / 2)); background: #0d0d0d; }
+.works-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.work-card { min-width: 0; }
+.work-visual { position: relative; display: grid; place-items: center; aspect-ratio:  16 / 9; overflow: hidden; border: 1px solid rgba(255,255,255,.12); background: radial-gradient(ellipse at 50% 48%, #3a3a3a 0%, #171717 44%, #090909 100%); }
+/* 第一張作品：城市邊緣人 */
+.work-card-one .work-visual {
+  background: url("../assets/works/work-01.png") center / cover no-repeat;
+}
+
+/* 第二張作品 */
+.work-card-two .work-visual {
+  background: url("../assets/works/work-02.png") center / cover no-repeat;
+}
+
+/* 第三張作品 */
+.work-card-three .work-visual {
+  background: url("../assets/works/work-03.png") center / cover no-repeat;
+}
+
+/* 第四部作品 */
+.work-card-four .work-visual {
+  background: url("../assets/works/work-04.png") center / cover no-repeat;
+}
+
+/* 第五部作品 */
+.work-card-five .work-visual {
+  background: url("../assets/works/work-05.png") center / cover no-repeat;
+}
+
+/* 第六部作品 */
+.work-card-six .work-visual {
+  background: url("../assets/works/work-06.png") center / cover no-repeat;
+}
+
+/* 第七部作品 */
+.work-card-seven .work-visual {
+  background: url("../assets/works/work-07.png") center / cover no-repeat;
+}
+
+/* 第八部作品 */
+.work-card-eight .work-visual {
+  background: url("../assets/works/work-08.png") center / cover no-repeat;
+}
+
+/* 第九部作品 */
+.work-card-nine .work-visual {
+  background: url("../assets/works/work-09.png") center / cover no-repeat;
+}
+
+
+.work-visual::before { content: ""; position: absolute; inset: 12px; border: 1px solid rgba(255,255,255,.14); }
+.visual-cross { position: absolute; color: rgba(255,255,255,.5); font-size: 52px; font-weight: 200; }
+.visual-word { position: absolute; bottom: 22px; right: 25px; color: rgba(255,255,255,.24); font-family: Georgia, serif; font-size: clamp(18px, 3vw, 34px); letter-spacing: .13em; }
+/* 使用真實作品封面，隱藏原本示意符號 */
+.work-visual .visual-cross,
+.work-visual .visual-word {
+  display: none;
+}
+.work-meta { display: flex; justify-content: space-between; align-items: center; padding: 16px 2px 0; }
+.work-meta span { color: #777; font-size: 9px; letter-spacing: .12em; }
+.work-meta h3 { margin: 4px 0 0; font-size: 16px; font-weight: 500; letter-spacing: .06em; }
+.work-arrow { color: var(--color-silver) !important; font-size: 18px !important; }
+
+/* 聯絡與頁尾 */
+.contact-section { padding: 110px 24px 120px; text-align: center; background: radial-gradient(ellipse at 50% 100%, #222 0%, #0b0b0b 55%, #050505 100%); }
+.contact-section h2 { margin: 0; font-size: clamp(38px, 6vw, 68px); line-height: 1.35; letter-spacing: .09em; }
+.contact-section > p:not(.section-kicker) { margin: 22px 0 28px; color: #999; font-size: 13px; }
+.site-footer { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 30px max(5vw, calc((100vw - var(--content-width)) / 2)); border-top: 1px solid var(--color-line); }
+.footer-brand { width: 125px; flex: 0 0 auto; }
+.footer-brand img { display: block; width: 100%; height: auto; }
+.site-footer p { margin: 0; color: #888; font-size: 11px; }
+.site-footer > span { color: #666; font-size: 8px; letter-spacing: .12em; text-align: right; }
+
+/* 平板與手機版 */
+@media (max-width: 850px) {
+  .site-header { min-height: 76px; padding: 10px 5vw; }
+  .brand { width: 155px; }
+  .menu-toggle { display: flex; flex-direction: column; justify-content: center; gap: 5px; width: 42px; height: 42px; padding: 9px; border: 1px solid var(--color-line); background: transparent; cursor: pointer; }
+  .menu-toggle span { display: block; width: 100%; height: 1px; background: white; }
+  .main-nav { position: absolute; top: 100%; left: 0; right: 0; display: none; flex-direction: column; align-items: stretch; gap: 0; padding: 10px 5vw 20px; background: #080808; border-bottom: 1px solid var(--color-line); }
+  .main-nav.is-open { display: flex; }
+  .main-nav a { padding: 13px 3px; }
+  .main-nav .nav-contact { margin-top: 7px; text-align: center; }
+  .hero { grid-template-columns: 1fr; gap: 15px; min-height: auto; padding: 85px 7vw 90px; }
+  .hero-art { min-height: 390px; }
+  .art-frame { width: min(62%, 340px); }
+  .about-section { grid-template-columns: 1fr; gap: 0; }
+  .about-content { padding-top: 0; }
+}
+@media (max-width: 600px) {
+  .hero { padding-top: 68px; }
+  .hero h1 { font-size: clamp(38px, 11vw, 56px); }
+  .hero-description { font-size: 12px; }
+  .hero-art { min-height: 330px; }
+  .art-frame { width: min(68%, 275px); }
+  .section { padding: 78px 22px; }
+  .section-heading-row { align-items: start; flex-direction: column; }
+  .section-side-note { margin-top: -12px; }
+  .service-grid, .works-grid { grid-template-columns: 1fr; }
+  .service-card { min-height: 240px; }
+  .work-visual { aspect-ratio: 1.5; }
+  .works-section { padding-right: 22px; padding-left: 22px; }
+  .contact-section { padding: 85px 20px 90px; }
+  .site-footer { align-items: flex-start; flex-direction: column; padding: 28px 22px; }
+  .site-footer > span { text-align: left; }
+}
+
+/* =================================
+   三氏影視｜作品分類選單
+================================= */
+
+.works-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0 0 32px;
+}
+
+.filter-button {
+  appearance: none;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: transparent;
+  color: #bfc0c2;
+  padding: 12px 24px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.filter-button:hover {
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+.filter-button.is-active {
+  color: #050505;
+  background: #ffffff;
+  border-color: #ffffff;
+}
+
+.work-card[hidden] {
+  display: none !important;
+}
+
+/* 手機版分類按鈕 */
+@media (max-width: 640px) {
+  .works-filters {
+    gap: 8px;
+  }
+
+  .filter-button {
+    padding: 10px 14px;
+    font-size: 11px;
+  }
+}
+
+/* ========================================
+   三氏影視｜YouTube 影片播放視窗
+======================================== */
+
+/* 播放視窗預設隱藏 */
+.video-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* 開啟播放視窗 */
+.video-modal.is-open {
+  display: flex;
+}
+
+/* 黑色背景遮罩 */
+.video-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(8px);
+}
+
+/* 播放視窗本體 */
+.video-modal__panel {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 1050px);
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 28px;
+  background: linear-gradient(145deg, #181818, #050505);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 25px 100px rgba(0, 0, 0, 0.8);
+}
+
+/* 標題與關閉按鈕 */
+.video-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 22px;
+}
+
+.video-modal__label {
+  display: block;
+  color: #bfc0c2;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  margin-bottom: 10px;
+}
+
+.video-modal__header h2 {
+  color: #ffffff;
+  margin: 0;
+  font-size: clamp(20px, 3vw, 30px);
+  letter-spacing: 0.08em;
+}
+
+/* 關閉按鈕 */
+.video-modal__close {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: transparent;
+  color: #ffffff;
+  font-size: 30px;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.video-modal__close:hover {
+  background: #ffffff;
+  color: #050505;
+}
+
+/* YouTube 播放器 */
+.video-modal__player {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+}
+
+.video-modal__player iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* 播放視窗底部文字 */
+.video-modal__footer {
+  margin: 18px 0 0;
+  color: #777777;
+  font-size: 10px;
+  letter-spacing: 0.17em;
+}
+
+/* 開啟播放時禁止背景捲動 */
+body.video-modal-open {
+  overflow: hidden;
+}
+
+/* 手機版播放視窗 */
+@media (max-width: 640px) {
+  .video-modal {
+    padding: 12px;
+  }
+
+  .video-modal__panel {
+    padding: 16px;
+    max-height: 95vh;
+  }
+
+  .video-modal__header {
+    margin-bottom: 14px;
+  }
+
+  .video-modal__close {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* ========================================
+   三氏影視｜作品搜尋欄
+======================================== */
+
+.works-search {
+  max-width: 560px;
+  margin: 0 0 30px;
+}
+
+.works-search label {
+  display: block;
+  margin-bottom: 10px;
+  color: #d9d9d9;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+}
+
+.works-search__box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 54px;
+  padding: 0 18px;
+  background: #111111;
+  border: 1px solid rgba(255,255,255,0.22);
+  transition: border-color 0.25s ease;
+}
+
+.works-search__box:focus-within {
+  border-color: #ffffff;
+}
+
+.works-search__box span {
+  color: #aaaaaa;
+  font-size: 24px;
+}
+
+.works-search__box input {
+  width: 100%;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+}
+
+.works-search__box input::placeholder {
+  color: #777777;
+}
+
+.works-search__box input::-webkit-search-cancel-button {
+  cursor: pointer;
+}
+
+#search-result-count {
+  margin: 10px 0 0;
+  color: #888888;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+
+/* 手機版搜尋框 */
+@media (max-width: 640px) {
+  .works-search {
+    width: 100%;
+    margin-bottom: 24px;
+  }
+
+  .works-search__box {
+    min-height: 48px;
+    padding: 0 13px;
+  }
+}
+
+/* ========================================
+   三氏影視｜動態作品統計卡片
+======================================== */
+
+.works-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  max-width: 900px;
+  margin: 30px 0 38px;
+}
+
+.works-stat {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  min-height: 120px;
+  padding: 22px;
+  background: linear-gradient(145deg, #191919, #0b0b0b);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  transition: border-color 0.3s ease,
+              transform 0.3s ease;
+}
+
+.works-stat:hover {
+  border-color: rgba(255, 255, 255, 0.55);
+  transform: translateY(-4px);
+}
+
+.works-stat__number {
+  color: #ffffff;
+  font-size: clamp(30px, 3vw, 42px);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  font-family: Arial, sans-serif;
+}
+
+.works-stat__label {
+  color: #999999;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+}
+
+/* 平板版 */
+@media (max-width: 768px) {
+  .works-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .works-stat {
+    min-height: 100px;
+    padding: 18px;
+  }
+}
+
+/* 手機版 */
+@media (max-width: 480px) {
+  .works-stats {
+    gap: 8px;
+    margin: 24px 0 28px;
+  }
+
+  .works-stat {
+    min-height: 88px;
+    padding: 14px;
+  }
+
+  .works-stat__label {
+    font-size: 10px;
+  }
+}
+
+/* ========================================
+   三氏影視｜平板版 RWD 最佳化
+   平板：每排顯示 2 部作品
+======================================== */
+
+@media (min-width: 601px) and (max-width: 850px) {
+
+  /* 作品展示：兩欄排列 */
+  .works-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  /* 服務項目：兩欄排列 */
+  .service-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* 統計卡片：兩欄排列 */
+  .works-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* 平板左右留白 */
+  .works-section {
+    padding-left: 28px;
+    padding-right: 28px;
+  }
+}
