@@ -40,7 +40,7 @@ const workFilterButtons = document.querySelectorAll(
 );
 
 // 取得九部作品
-const workCards = document.querySelectorAll(
+let workCards = document.querySelectorAll(
   ".works-grid > .work-card"
 );
 
@@ -308,14 +308,18 @@ function closeVideoModal() {
   }
 }
 
-// 監聽九部作品的封面點擊
-if (worksGrid && videoModal && videoPlayer) {
-  worksGrid.querySelectorAll("a.work-card[href]").forEach((card) => {
-    card.addEventListener("click", (event) => {
+
+  // 監聽作品卡片點擊（支援 Supabase 動態新增的卡片）
+  if (worksGrid && videoModal && videoPlayer) {
+    worksGrid.addEventListener("click", (event) => {
+      const card = event.target.closest("a.work-card[href]");
+
+      if (!card || !worksGrid.contains(card)) return;
+
       const link = card.getAttribute("href");
       const videoId = getYouTubeVideoId(link);
 
-      // 頻道列表等非單一影片網址，維持原本外部連結行為
+      // 非單一 YouTube 影片網址，保留原本連結行為
       if (!videoId) return;
 
       event.preventDefault();
@@ -326,8 +330,8 @@ if (worksGrid && videoModal && videoPlayer) {
 
       openVideoModal(videoId, title);
     });
-  });
-}
+  }
+
 
 // 點擊 X 或黑色背景，關閉視窗
 if (videoModal) {
