@@ -84,13 +84,19 @@ document.addEventListener("DOMContentLoaded", async () => {
       visual.className = "work-visual";
 
       if (film.thumbnail_url) {
-        visual.style.backgroundImage =
-          `url("${film.thumbnail_url}")`;
-        visual.style.backgroundPosition = "center";
-        visual.style.backgroundSize = "cover";
-        visual.style.backgroundRepeat = "no-repeat";
-      }
+  const thumbnail = document.createElement("img");
 
+  thumbnail.src = film.thumbnail_url;
+  thumbnail.alt = film.title || "三氏影視作品封面";
+  thumbnail.loading = "lazy";
+
+  thumbnail.style.width = "100%";
+  thumbnail.style.height = "100%";
+  thumbnail.style.objectFit = "cover";
+  thumbnail.style.display = "block";
+
+  visual.replaceChildren(thumbnail);
+}
       // 建立作品文字區
       const meta = document.createElement("div");
       meta.className = "work-meta";
