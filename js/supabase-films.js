@@ -39,7 +39,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const categoryNames = {
       film: "電影預告片",
       short: "短片故事",
-      music: "音樂 MV"
+      music: "音樂 MV",
+      shorts: "Shorts 短影音"  
     };
 
     // 保留原本作品卡片的 CSS 類別名稱

@@ -215,7 +215,67 @@ workFilterButtons.forEach((button) => {
     updateWorkDisplay();
   });
 });
+// 客製化商品與課程教學切換功能
 
+const extraCategoryButtons = document.querySelectorAll(
+    ".works-filters .extra-category-button"
+);
+
+const worksGridElement = document.querySelector(".works-grid");
+const customProductsView = document.getElementById("custom-products-view");
+const coursesView = document.getElementById("courses-view");
+const worksSearchSection = document.querySelector(".works-search");
+const worksSearchCount = document.getElementById("search-result-count");
+const worksContentNote = document.querySelector(".works-section .content-note");
+
+// 點擊原本四個影片分類時，恢復影片展示
+function showFilmWorksView() {
+    worksGridElement.hidden = false;
+    customProductsView.hidden = true;
+    coursesView.hidden = true;
+
+    worksSearchSection.hidden = false;
+    worksSearchCount.hidden = false;
+    worksContentNote.hidden = false;
+
+    extraCategoryButtons.forEach((item) => {
+        item.classList.remove("is-active");
+        item.setAttribute("aria-pressed", "false");
+    });
+}
+
+// 原本四個影片分類繼續正常運作
+workFilterButtons.forEach((button) => {
+    button.addEventListener("click", showFilmWorksView);
+});
+
+// 點擊客製化商品或課程教學
+extraCategoryButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+        const selectedView = button.dataset.view;
+
+        worksGridElement.hidden = true;
+
+        customProductsView.hidden = selectedView !== "products";
+        coursesView.hidden = selectedView !== "courses";
+
+        worksSearchSection.hidden = true;
+        worksSearchCount.hidden = true;
+        worksContentNote.hidden = true;
+
+        workFilterButtons.forEach((item) => {
+            item.classList.remove("is-active");
+            item.setAttribute("aria-pressed", "false");
+        });
+
+        extraCategoryButtons.forEach((item) => {
+            const isActive = item === button;
+
+            item.classList.toggle("is-active", isActive);
+            item.setAttribute("aria-pressed", String(isActive));
+        });
+    });
+});
 // 輸入文字時即時搜尋
 if (workSearchInput) {
 

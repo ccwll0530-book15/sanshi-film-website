@@ -592,3 +592,524 @@ body.video-modal-open {
     padding-right: 28px;
   }
 }
+
+/* =====================================
+   三氏影視｜統計與分類整合藍光框架
+===================================== */
+
+.works-overview {
+  width: min(1100px, calc(100% - 48px));
+  max-width: 1100px;
+  margin: 30px auto 38px;
+  padding: 30px 32px;
+  box-sizing: border-box;
+
+  background:
+    radial-gradient(
+      ellipse at top,
+      rgba(25, 110, 180, 0.20),
+      transparent 65%
+    ),
+    linear-gradient(145deg, #0b1925, #050a10);
+
+  border: 2px solid rgba(70, 165, 235, 0.85);
+  border-radius: 28px;
+
+  box-shadow:
+    0 0 12px rgba(40, 150, 255, 0.35),
+    0 0 28px rgba(40, 150, 255, 0.15),
+    inset 0 0 25px rgba(45, 130, 210, 0.10);
+}
+
+/* 統計區標題 */
+.works-overview::before {
+  content: "🎬 影視作品統計";
+  display: block;
+  margin-bottom: 24px;
+  color: #f2f8ff;
+  font-size: 25px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+/* 四組統計數字 */
+.works-overview .works-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0 0 26px;
+}
+
+.works-overview .works-stat {
+  min-width: 0;
+  min-height: 130px;
+  padding: 18px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+
+  background: transparent;
+  border: 0;
+  border-right: 1px solid rgba(115, 185, 235, 0.30);
+  border-radius: 0;
+  box-shadow: none;
+  transform: none;
+}
+
+.works-overview .works-stat:first-child {
+  background: linear-gradient(
+    145deg,
+    rgba(30, 115, 185, 0.32),
+    rgba(10, 40, 70, 0.32)
+  );
+
+  border: 1px solid #56b9ff;
+  border-radius: 14px;
+
+  box-shadow:
+    0 0 12px rgba(45, 160, 255, 0.35),
+    inset 0 0 15px rgba(45, 160, 255, 0.12);
+}
+
+.works-overview .works-stat:last-child {
+  border-right: 0;
+}
+
+.works-overview .works-stat__number {
+  color: #ffffff;
+  text-shadow: 0 0 12px rgba(100, 190, 255, 0.35);
+}
+
+.works-overview .works-stat__label {
+  color: #b9cfe0;
+}
+
+/* 分類篩選區 */
+.works-overview .works-filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0;
+  padding-top: 24px;
+  border-top: 1px solid rgba(115, 185, 235, 0.35);
+}
+
+.works-overview .works-filters::before {
+  content: "作品分類篩選";
+  color: #e6f4ff;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-right: auto;
+}
+
+.works-overview .filter-button {
+  min-width: 145px;
+  padding: 12px 20px;
+  border: 1px solid rgba(110, 190, 245, 0.75);
+  border-radius: 11px;
+  background: rgba(5, 18, 30, 0.65);
+  color: #f3f8ff;
+  transition: all 0.25s ease;
+}
+
+.works-overview .filter-button:hover {
+  border-color: #65c5ff;
+  box-shadow: 0 0 12px rgba(45, 160, 255, 0.35);
+}
+
+.works-overview .filter-button.is-active {
+  background: linear-gradient(135deg, #145b91, #07345c);
+  border-color: #65c5ff;
+  color: #ffffff;
+  box-shadow: 0 0 14px rgba(45, 160, 255, 0.45);
+}
+
+/* 手機版調整 */
+@media (max-width: 640px) {
+  .works-overview {
+    width: calc(100% - 28px);
+    margin: 22px auto 28px;
+    padding: 20px 14px;
+    border-radius: 19px;
+  }
+
+  .works-overview::before {
+    font-size: 21px;
+    margin-bottom: 16px;
+  }
+
+  .works-overview .works-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-bottom: 18px;
+  }
+
+  .works-overview .works-stat {
+    min-height: 100px;
+    padding: 12px 6px;
+    border-right: 1px solid rgba(115, 185, 235, 0.30);
+    border-bottom: 1px solid rgba(115, 185, 235, 0.30);
+  }
+
+  .works-overview .works-stat:nth-child(2) {
+    border-right: 0;
+  }
+
+  .works-overview .works-stat:nth-child(n+3) {
+    border-bottom: 0;
+  }
+
+  .works-overview .works-stat:first-child {
+    border: 1px solid #56b9ff;
+    border-radius: 12px;
+  }
+
+  .works-overview .works-stat:last-child {
+    border-right: 0;
+  }
+
+  .works-overview .works-filters {
+    gap: 8px;
+    padding-top: 17px;
+  }
+
+  .works-overview .works-filters::before {
+    flex: 0 0 100%;
+    margin: 0 0 5px;
+    font-size: 17px;
+  }
+
+  .works-overview .filter-button {
+    flex: 1 1 calc(50% - 8px);
+    min-width: 0;
+    padding: 11px 6px;
+  }
+}
+
+/* =====================================
+   三氏影視｜手機版統計框尺寸優化
+===================================== */
+
+@media (max-width: 480px) {
+
+  /* 最外層藍光統計框 */
+  .works-overview {
+    width: calc(100% - 24px);
+    max-width: 100%;
+    margin: 16px auto 24px;
+    padding: 17px 12px;
+    border-radius: 18px;
+  }
+
+  /* 統計框標題 */
+  .works-overview::before {
+    font-size: 19px;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+
+  /* 四組統計：兩欄兩排 */
+  .works-overview .works-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    padding-bottom: 16px;
+  }
+
+  /* 每一張統計卡 */
+  .works-overview .works-stat {
+    min-width: 0;
+    min-height: 88px;
+    padding: 10px 5px;
+    gap: 7px;
+  }
+
+  /* 統計數字 */
+  .works-overview .works-stat__number {
+    font-size: clamp(30px, 8vw, 36px);
+  }
+
+  /* 統計文字 */
+  .works-overview .works-stat__label {
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+
+  /* 統計框下方的分類區 */
+  .works-overview .works-filters {
+    gap: 8px;
+    padding-top: 15px;
+  }
+
+  /* 分類標題獨立一排 */
+  .works-overview .works-filters::before {
+    flex: 0 0 100%;
+    margin: 0 0 5px;
+    font-size: 16px;
+  }
+
+  /* 四個分類按鈕：兩欄兩排 */
+  .works-overview .filter-button {
+    flex: 1 1 calc(50% - 8px);
+    min-width: 0;
+    min-height: 42px;
+    padding: 10px 5px;
+    font-size: 12px;
+    border-radius: 9px;
+  }
+}
+
+/* 更窄的手機螢幕 */
+@media (max-width: 360px) {
+  .works-overview {
+    width: calc(100% - 18px);
+    padding: 14px 9px;
+  }
+
+  .works-overview .works-stat {
+    min-height: 80px;
+  }
+
+  .works-overview .filter-button {
+    font-size: 11px;
+  }
+}
+
+/* =====================================
+   三氏影視｜作品分類按鈕手機版
+===================================== */
+
+@media (max-width: 640px) {
+
+  /* 分類區：固定兩欄 */
+  .works-section .works-filters {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin: 0 0 22px;
+    padding: 0;
+  }
+
+  /* 分類標題 */
+  .works-section .works-filters::before {
+    content: "作品分類篩選";
+    grid-column: 1 / -1;
+    color: #e6f4ff;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+
+  /* 四個分類按鈕 */
+  .works-section .filter-button {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 10px 5px;
+    box-sizing: border-box;
+    border: 1px solid rgba(110, 190, 245, 0.75);
+    border-radius: 9px;
+    background: rgba(5, 18, 30, 0.8);
+    color: #f3f8ff;
+    font-size: 13px;
+  }
+
+  /* 選取中的分類 */
+  .works-section .filter-button.is-active {
+    background: linear-gradient(135deg, #145b91, #07345c);
+    border-color: #65c5ff;
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(45, 160, 255, 0.4);
+  }
+}
+/* 手機版：避免首頁統計面板被固定導覽列遮住 */
+@media (max-width: 640px) {
+  #home.overview-top {
+    scroll-margin-top: 90px;
+  }
+}
+/* 客製化商品與課程教學：沿用原本分類按鈕風格 */
+.extra-category-button {
+    appearance: none;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: transparent;
+    color: #bfc0c2;
+    padding: 12px 24px;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.extra-category-button:hover {
+    color: #ffffff;
+    border-color: #ffffff;
+}
+/* ==============================
+   三氏影視｜客製化商品展示卡片
+============================== */
+
+.extra-content-panel[hidden] {
+    display: none !important;
+}
+
+.extra-content-panel {
+    width: 100%;
+    margin: 40px 0;
+}
+
+.extra-content-panel h3 {
+    color: #ffffff;
+    font-size: 28px;
+    margin-bottom: 12px;
+    letter-spacing: 0.08em;
+}
+
+.extra-content-panel > p {
+    color: #999999;
+    font-size: 14px;
+    margin-bottom: 28px;
+}
+
+.extra-content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 320px));
+    gap: 24px;
+}
+
+.product-card {
+    overflow: hidden;
+    background: #101010;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: border-color 0.25s ease;
+}
+
+.product-card:hover {
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+.product-card-image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #171d25, #090b10);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    color: #888888;
+    font-size: 13px;
+}
+
+.product-card-info {
+    padding: 22px;
+}
+
+.product-card-category {
+    color: #9bbbd4;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+}
+
+.product-card-title {
+    color: #ffffff;
+    font-size: 20px;
+    margin: 14px 0;
+}
+
+.product-card-description {
+    color: #999999;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.product-card-price {
+    color: #ffffff;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+/* 手機版 */
+@media (max-width: 640px) {
+    .extra-content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .extra-content-panel h3 {
+        font-size: 24px;
+    }
+
+    .product-card {
+        width: 100%;
+    }
+}
+/* ==============================
+   三氏影視｜商品與課程影片播放器
+============================== */
+
+.custom-product-video,
+.course-video {
+    width: 100%;
+    max-width: 900px;
+    margin: 32px 0;
+}
+
+.custom-product-video h4,
+.course-video h4 {
+    color: #ffffff;
+    font-size: 20px;
+    margin-bottom: 16px;
+}
+
+.custom-product-video-frame,
+.course-video-frame {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: #000000;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.custom-product-video-frame iframe,
+.course-video-frame iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+}
+
+/* 手機版影片 */
+@media (max-width: 640px) {
+    .custom-product-video,
+    .course-video {
+        width: 100%;
+        margin: 24px 0;
+    }
+}
+/* =================================
+   Shorts 短影音｜9:16 直式預覽視窗
+================================= */
+
+.work-card[data-category="shorts"] {
+    width: 100%;
+    max-width: 260px;
+}
+
+.work-card[data-category="shorts"] .work-visual {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 9 / 16;
+    overflow: hidden;
+}
+
+.work-card[data-category="shorts"] .work-visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}

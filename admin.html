@@ -1,0 +1,871 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>三氏影視｜管理員後台</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #08090b;
+      color: #f5f5f5;
+      font-family: "Microsoft JhengHei", sans-serif;
+    }
+
+    header {
+      padding: 22px 7%;
+      border-bottom: 1px solid #292929;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      color: #fff;
+      font-size: 25px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .tag {
+      color: #999;
+      font-size: 11px;
+      letter-spacing: 3px;
+    }
+
+    main {
+      width: min(900px, 92%);
+      margin: 65px auto;
+    }
+
+    .panel {
+      background: #111214;
+      border: 1px solid #303030;
+      padding: 30px;
+      border-radius: 5px;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 27px;
+    }
+
+    .subtitle {
+      color: #999;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    label {
+      display: block;
+      margin: 20px 0 8px;
+      color: #ccc;
+      font-size: 13px;
+    }
+
+    input {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: #08090b;
+      border: 1px solid #444;
+      color: white;
+      border-radius: 3px;
+      font-size: 15px;
+    }
+
+    button {
+      padding: 13px 22px;
+      margin-top: 22px;
+      background: white;
+      border: 1px solid white;
+      color: #111;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .message {
+      margin-top: 18px;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #b9c9d8;
+      overflow-wrap: anywhere;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    .dashboard-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .dashboard-top button {
+      margin-top: 0;
+      background: transparent;
+      color: white;
+      border-color: #555;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 25px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 550px;
+    }
+
+    th, td {
+      padding: 14px 10px;
+      border-bottom: 1px solid #303030;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    th {
+      color: #aaa;
+      font-weight: normal;
+    }
+
+    td {
+      color: #eee;
+    }
+
+    footer {
+      text-align: center;
+      color: #666;
+      font-size: 11px;
+      padding: 35px 10px;
+      letter-spacing: 2px;
+    }
+
+    @media (max-width: 600px) {
+      main {
+        margin: 35px auto;
+      }
+
+      .panel {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 23px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <a class="brand" href="index.html">三氏影視</a>
+    <span class="tag">ADMIN CONTROL PANEL</span>
+  </header>
+
+  <main>
+
+    <!-- 管理員登入區 -->
+    <section class="panel" id="login-panel">
+      <h1>管理員登入</h1>
+
+      <p class="subtitle">
+        SANSHI FILM · MANAGEMENT SYSTEM<br>
+        請使用已授權的管理員帳號登入。
+      </p>
+
+      <form id="login-form">
+
+        <label for="email">電子郵件</label>
+        <input
+          id="email"
+          type="email"
+          autocomplete="username"
+          placeholder="輸入管理員 Email"
+          required
+        >
+
+        <label for="password">登入密碼</label>
+        <input
+          id="password"
+          type="password"
+          autocomplete="current-password"
+          placeholder="輸入登入密碼"
+          required
+        >
+
+        <button type="submit" id="login-button">
+          登入管理後台
+        </button>
+
+      </form>
+
+      <p class="message" id="login-message" aria-live="polite"></p>
+    </section>
+
+
+    <!-- 登入後的管理畫面 -->
+    <section class="panel" id="dashboard-panel" hidden>
+
+      <div class="dashboard-top">
+        <div>
+          <h1>影片管理中心</h1>
+          <p class="subtitle" id="admin-email"></p>
+        </div>
+
+        <button type="button" id="logout-button">
+          登出
+        </button>
+      </div>
+
+<!-- 新增影片表單 -->
+<div style="margin: 28px 0; padding: 22px; border: 1px solid #303030;">
+
+  <h2>新增影片</h2>
+
+  <p class="subtitle">
+    建立新的三氏影視作品資料
+  </p>
+
+  <form id="film-form">
+
+    <label for="new-title">影片名稱</label>
+    <input
+      id="new-title"
+      type="text"
+      placeholder="例如：我的新作品"
+      required
+    >
+
+    <label for="new-category">影片分類</label>
+    <select
+      id="new-category"
+      required
+      style="width:100%; padding:14px; background:#08090b; color:white; border:1px solid #444;"
+    >
+      <option value="film">電影預告</option>
+      <option value="short">短片故事</option>
+      <option value="music">音樂 MV</option>
+      <option value="shorts">Shorts 短影音</option>
+    </select>
+
+<!-- 封面圖片直接上傳 -->
+<label for="new-thumbnail-file">直接上傳封面圖片</label>
+<input
+  id="new-thumbnail-file"
+  type="file"
+  accept="image/jpeg,image/png,image/webp"
+>
+
+<p class="subtitle">
+  支援 JPG、PNG、WebP，單張圖片最大 5 MB。
+  選擇圖片後，系統會自動上傳並填入下方圖片網址。
+</p>
+
+<p
+  class="message"
+  id="thumbnail-upload-message"
+  aria-live="polite"
+></p>
+
+    <label for="new-thumbnail-url">封面圖片網址</label>
+
+
+
+    <input
+      id="new-thumbnail-url"
+      type="url"
+      placeholder="https://example.com/cover.jpg"
+      required
+    >
+    
+    <!-- 封面圖片預覽 -->
+<div
+  id="thumbnail-preview-wrap"
+  hidden
+  style="margin: 12px 0 20px;"
+>
+  <p class="subtitle">封面圖片預覽</p>
+  <img
+    id="thumbnail-preview"
+    alt="封面圖片預覽"
+    style="
+      display: block;
+      max-width: 320px;
+      max-height: 200px;
+      object-fit: contain;
+      border: 1px solid #444;
+      border-radius: 4px;
+    "
+  >
+</div>
+
+    <label for="new-video-url">YouTube 影片網址</label>
+    <input
+      id="new-video-url"
+      type="url"
+      placeholder="https://www.youtube.com/watch?v=..."
+      required
+    >
+
+<label for="new-description">影片介紹（選填）</label>
+
+<textarea id="new-description" rows="3" placeholder="輸入影片簡介或故事內容" style="width: 100%; padding: 14px; background: #08090b; color: #fff; border: 1px solid #444; resize: vertical;"></textarea>
+
+
+    <label for="new-sort-order">排序數字</label>
+    <input
+      id="new-sort-order"
+      type="number"
+      min="0"
+      value="10"
+      required
+    >
+
+    <label for="new-published">發布狀態</label>
+    <select
+      id="new-published"
+      style="width: 100%; padding: 14px; background: #08090b; color: #fff; border: 1px solid #444;"
+    >
+      <option value="false">暫不發布</option>
+      <option value="true">立即發布</option>
+    </select>
+
+    <button type="submit" id="add-film-button">
+      新增影片
+    </button>
+
+  </form>
+
+  <p class="message" id="film-form-message" aria-live="polite"></p>
+
+</div>
+<!-- 新增影片表單結束 -->
+
+      <p class="subtitle" id="admin-message" aria-live="polite">
+        正在讀取影片資料……
+      </p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>影片名稱</th>
+              <th>分類</th>
+              <th>發布狀態</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+
+          <tbody id="films-list"></tbody>
+        </table>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer>
+    SANSHI FILM · EVERY FRAME TELLS A STORY
+  </footer>
+
+
+  <!-- Supabase 官方程式庫 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- 沿用原本網站的 Supabase 設定 -->
+  <script src="js/supabase-config.js"></script>
+  <script src="js/supabase-client.js"></script>
+
+
+  <script>
+    const supabaseClient = window.sanshiSupabase;
+
+    const loginPanel = document.getElementById("login-panel");
+    const dashboardPanel = document.getElementById("dashboard-panel");
+
+    const loginForm = document.getElementById("login-form");
+    const loginButton = document.getElementById("login-button");
+    const loginMessage = document.getElementById("login-message");
+
+    const adminEmail = document.getElementById("admin-email");
+    const adminMessage = document.getElementById("admin-message");
+    const filmsList = document.getElementById("films-list");
+    let editingFilmId = null;
+
+// =====================================
+// 三氏影視：封面圖片直接上傳 Supabase
+// =====================================
+
+const coverFileInput = document.getElementById("new-thumbnail-file");
+const coverUrlInput = document.getElementById("new-thumbnail-url");
+const coverUploadMessage = document.getElementById("thumbnail-upload-message");
+
+// 封面圖片預覽元素
+const coverPreviewWrap = document.getElementById("thumbnail-preview-wrap");
+const coverPreview = document.getElementById("thumbnail-preview");
+
+// 顯示封面圖片預覽
+function showThumbnailPreview(url) {
+  const imageUrl = (url || "").trim();
+
+  if (!imageUrl) {
+    coverPreview.removeAttribute("src");
+    coverPreviewWrap.hidden = true;
+    return;
+  }
+
+  coverPreview.onload = () => {
+    coverPreviewWrap.hidden = false;
+  };
+
+  coverPreview.onerror = () => {
+    coverPreviewWrap.hidden = true;
+  };
+
+  coverPreview.src = imageUrl;
+}
+// 依照影片分類切換封面預覽比例
+function updateCoverPreviewRatio() {
+    if (!coverPreview) return;
+
+    const isShorts =
+        document.getElementById("new-category")?.value === "shorts";
+
+    if (isShorts) {
+        coverPreview.style.width = "180px";
+        coverPreview.style.height = "320px";
+        coverPreview.style.maxWidth = "180px";
+        coverPreview.style.maxHeight = "320px";
+        coverPreview.style.objectFit = "contain";
+    } else {
+        coverPreview.style.width = "";
+        coverPreview.style.height = "";
+        coverPreview.style.maxWidth = "320px";
+        coverPreview.style.maxHeight = "200px";
+        coverPreview.style.objectFit = "contain";
+    }
+}
+
+// 選擇分類時，自動更新預覽比例
+const categorySelectForPreview =
+    document.getElementById("new-category");
+
+if (categorySelectForPreview) {
+    categorySelectForPreview.addEventListener(
+        "change",
+        updateCoverPreviewRatio
+    );
+
+    updateCoverPreviewRatio();
+}
+// 手動輸入或貼上圖片網址後，更新預覽
+if (coverUrlInput && coverPreviewWrap && coverPreview) {
+  coverUrlInput.addEventListener("change", () => {
+    showThumbnailPreview(coverUrlInput.value);
+  });
+}
+
+
+if (coverFileInput && coverUrlInput && coverUploadMessage) {
+  coverFileInput.addEventListener("change", async () => {
+    const file = coverFileInput.files?.[0];
+
+    if (!file) return;
+
+    // 避免使用舊圖片網址誤存新作品
+    coverUrlInput.value = "";
+
+    // 限制圖片格式
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp"
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      coverUploadMessage.textContent =
+        "上傳失敗：只允許 JPG、PNG、WebP 圖片。";
+      coverFileInput.value = "";
+      return;
+    }
+
+    // 限制圖片大小：5 MB
+    if (file.size > 5 * 1024 * 1024) {
+      coverUploadMessage.textContent =
+        "上傳失敗：圖片不可超過 5 MB。";
+      coverFileInput.value = "";
+      return;
+    }
+
+    if (!supabaseClient) {
+      coverUploadMessage.textContent =
+        "Supabase 尚未連線，請重新整理頁面。";
+      return;
+    }
+
+    coverFileInput.disabled = true;
+    coverUploadMessage.textContent = "正在上傳封面圖片……";
+
+    try {
+      // 根據圖片格式設定副檔名
+      const extensions = {
+        "image/jpeg": "jpg",
+        "image/png": "png",
+        "image/webp": "webp"
+      };
+
+      // 建立不容易重複的檔名
+      const extension = extensions[file.type];
+      const fileName =
+        `${Date.now()}-${Math.random().toString(36).slice(2, 10)}.${extension}`;
+
+      const filePath = `covers/${fileName}`;
+
+      // 上傳到既有的 film-thumbnails Bucket
+      const { data: uploadedFile, error: uploadError } =
+        await supabaseClient.storage
+          .from("film-thumbnails")
+          .upload(filePath, file, {
+            cacheControl: "3600",
+            upsert: false,
+            contentType: file.type
+          });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      // 取得公開圖片網址
+      const { data: publicUrlData } =
+        supabaseClient.storage
+          .from("film-thumbnails")
+          .getPublicUrl(uploadedFile.path);
+
+      if (!publicUrlData?.publicUrl) {
+        throw new Error("無法取得封面圖片網址。");
+      }
+
+      // 自動填入原本的封面圖片網址欄位
+      coverUrlInput.value = publicUrlData.publicUrl;
+     // 自動顯示封面預覽
+      showThumbnailPreview(publicUrlData.publicUrl);
+
+      coverUploadMessage.textContent =
+        "封面圖片上傳成功！圖片網址已自動填入。";
+
+    } catch (error) {
+      console.error("封面圖片上傳失敗：", error);
+
+      coverUploadMessage.textContent =
+        "上傳失敗：" +
+        (error?.message || "請檢查登入狀態及 Storage 權限。");
+
+    } finally {
+      coverFileInput.disabled = false;
+    }
+  });
+}
+
+    // 檢查 Supabase 連線
+    if (!supabaseClient) {
+      loginMessage.textContent =
+        "資料庫連線尚未初始化，請確認 Supabase 設定檔。";
+
+      loginButton.disabled = true;
+    }
+
+    // 管理員登入
+    loginForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      if (!supabaseClient) return;
+
+      loginButton.disabled = true;
+      loginMessage.textContent = "正在驗證管理員帳號……";
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      try {
+        const { error: signInError } =
+          await supabaseClient.auth.signInWithPassword({
+            email,
+            password
+          });
+
+        if (signInError) {
+          throw signInError;
+        }
+
+        // 向 Supabase Auth 取得目前使用者資料
+        const { data: userData, error: userError } =
+          await supabaseClient.auth.getUser();
+
+        if (userError || !userData.user) {
+          throw userError || new Error("無法取得使用者資料");
+        }
+
+        const user = userData.user;
+
+        // 必須是 app_metadata 中的 admin
+        if (user.app_metadata?.user_role !== "admin") {
+          await supabaseClient.auth.signOut();
+
+          throw new Error("此帳號沒有管理員權限。");
+        }
+
+        loginPanel.hidden = true;
+        dashboardPanel.hidden = false;
+
+        adminEmail.textContent =
+          "管理員帳號：" + (user.email || "");
+
+        // 讀取影片資料
+        await loadFilms();
+
+      } catch (error) {
+        loginMessage.textContent =
+          "登入失敗：" + (error.message || "請檢查帳號及密碼");
+
+        console.error("Admin login error:", error);
+
+      } finally {
+        loginButton.disabled = false;
+      }
+    });
+
+
+    // 讀取 Supabase 影片清單
+    async function loadFilms() {
+
+      adminMessage.textContent = "正在讀取影片資料……";
+      filmsList.replaceChildren();
+
+      const { data, error } = await supabaseClient
+        .from("films")
+        .select(
+           "id, title, video_url, thumbnail_url, category, description, is_published, sort_order"
+        )
+        .order("sort_order", { ascending: true });
+
+      if (error) {
+        adminMessage.textContent =
+          "無法讀取影片資料：" + error.message;
+
+        console.error("Load films error:", error);
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        adminMessage.textContent = "目前沒有影片資料。";
+        return;
+      }
+
+      data.forEach((film) => {
+        const row = document.createElement("tr");
+
+        const categoryNames = {
+          film: "電影預告",
+          short: "短片故事",
+          music: "音樂 MV"
+        };
+
+        const values = [
+          film.id,
+          film.title,
+          categoryNames[film.category] || film.category || "未分類",
+          film.is_published ? "已發布" : "未發布"
+        ];
+
+        values.forEach((value) => {
+          const cell = document.createElement("td");
+          cell.textContent = String(value ?? "");
+          row.appendChild(cell);
+        });
+// 建立操作欄及編輯按鈕
+const actionCell = document.createElement("td");
+const editButton = document.createElement("button");
+
+editButton.type = "button";
+editButton.textContent = "編輯";
+
+editButton.addEventListener("click", () => {
+  // 記錄目前正在編輯的作品 ID
+  editingFilmId = film.id;
+
+  // 將原有作品資料載入表單
+  document.getElementById("new-title").value = film.title ?? "";
+  document.getElementById("new-category").value = film.category ?? "film";
+  // 編輯影片時，自動套用對應的封面預覽比例
+updateCoverPreviewRatio();
+  document.getElementById("new-video-url").value = film.video_url ?? "";
+  document.getElementById("new-description").value = film.description ?? "";
+  document.getElementById("new-sort-order").value = film.sort_order ?? 0;
+  document.getElementById("new-published").value = String(!!film.is_published);
+
+  // 載入原有封面網址及預覽
+  coverUrlInput.value = film.thumbnail_url ?? "";
+  coverFileInput.value = "";
+  showThumbnailPreview(film.thumbnail_url ?? "");
+
+  // 更新按鈕文字
+  addFilmButton.textContent = "儲存修改";
+
+  filmFormMessage.textContent = "目前正在編輯：" + film.title;
+
+  // 自動捲動到表單
+  filmForm.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+});
+
+actionCell.appendChild(editButton);
+row.appendChild(actionCell);
+        filmsList.appendChild(row);
+      });
+
+      adminMessage.textContent =
+        "成功讀取 " + data.length + " 部影片。";
+    }
+
+// ======================================
+// 新增影片至 Supabase 資料庫
+// ======================================
+
+const filmForm = document.getElementById("film-form");
+const addFilmButton = document.getElementById("add-film-button");
+const filmFormMessage = document.getElementById("film-form-message");
+
+filmForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  if (!supabaseClient) {
+    filmFormMessage.textContent = "Supabase 尚未連線，無法新增影片。";
+    return;
+  }
+
+  addFilmButton.disabled = true;
+  filmFormMessage.textContent = "正在新增影片……";
+
+  try {
+    // 取得表單內容
+    const title = document.getElementById("new-title").value.trim();
+    const category = document.getElementById("new-category").value;
+    const thumbnailUrl = document.getElementById("new-thumbnail-url").value.trim();
+    const videoUrl = document.getElementById("new-video-url").value.trim();
+    const description = document.getElementById("new-description").value.trim();
+    const sortOrder = Number(document.getElementById("new-sort-order").value);
+    const isPublished =
+      document.getElementById("new-published").value === "true";
+
+    // 基本資料檢查
+    if (!title || !thumbnailUrl || !videoUrl) {
+      throw new Error("請填寫影片名稱、封面網址及 YouTube 網址。");
+    }
+
+    if (!Number.isFinite(sortOrder) || sortOrder < 0) {
+      throw new Error("排序數字必須是 0 或正整數。");
+    }
+
+    // 確認網址格式
+    new URL(thumbnailUrl);
+    new URL(videoUrl);
+
+    // 組合 Supabase 資料
+    const newFilm = {
+      title: title,
+      category: category,
+      thumbnail_url: thumbnailUrl,
+      video_url: videoUrl,
+      description: description,
+      sort_order: sortOrder,
+      is_published: isPublished
+    };
+const wasEditing = editingFilmId !== null;
+    // 依照模式新增或更新 films 資料表
+const saveResult = editingFilmId !== null
+  ? await supabaseClient
+      .from("films")
+      .update(newFilm)
+      .eq("id", editingFilmId)
+  : await supabaseClient
+      .from("films")
+      .insert([newFilm]);
+
+if (saveResult.error) {
+  throw saveResult.error;
+}
+
+    // 清空表單
+    filmForm.reset();
+// 結束編輯模式，恢復新增影片狀態
+editingFilmId = null;
+addFilmButton.textContent = "新增影片";
+
+// 清除封面網址及預覽
+coverUrlInput.value = "";
+coverFileInput.value = "";
+showThumbnailPreview("");
+coverUploadMessage.textContent = "";
+    // 重新讀取影片清單
+    await loadFilms();
+
+    filmFormMessage.textContent = wasEditing
+  ? "影片「" + title + "」已成功更新！"
+  : "影片「" + title + "」已成功新增！";
+
+  } catch (error) {
+    console.error("新增影片失敗：", error);
+
+    filmFormMessage.textContent =
+      "新增失敗：" + error.message;
+
+  } finally {
+    addFilmButton.disabled = false;
+  }
+});
+
+
+    // 管理員登出
+    document.getElementById("logout-button")
+      .addEventListener("click", async () => {
+
+        const { error } = await supabaseClient.auth.signOut();
+
+        if (error) {
+          adminMessage.textContent =
+            "登出時發生錯誤：" + error.message;
+          return;
+        }
+
+        dashboardPanel.hidden = true;
+        loginPanel.hidden = false;
+        loginForm.reset();
+        loginMessage.textContent = "已安全登出。";
+      });
+
+  </script>
+
+</body>
+</html>
