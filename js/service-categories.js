@@ -1,24 +1,21 @@
-// 三氏影視｜服務項目中的客製化商品與課程教學切換
-// 入口放在「服務項目」區，不再混入「影視作品」分類篩選。
+// 三氏影視｜服務項目展開切換
+// 「查看商品與訂購」會直接開啟訂購表單；介紹影片與商品展示保留在表單下方。
 (() => {
   "use strict";
 
-  const buttons = Array.from(
-    document.querySelectorAll(".services-section .extra-category-button[data-view]")
-  );
-  const productPanel = document.getElementById("custom-products-view");
-  const coursePanel = document.getElementById("courses-view");
+  const section = document.querySelector(".services-section");
+  if (!section) return;
+
+  const buttons = Array.from(section.querySelectorAll(".service-card-action .extra-category-button[data-view]"));
   const panels = {
-    products: productPanel,
-    courses: coursePanel
+    products: document.getElementById("custom-products-view"),
+    courses: document.getElementById("courses-view")
   };
 
-  if (!buttons.length || !productPanel || !coursePanel) return;
+  if (!buttons.length || !panels.products || !panels.courses) return;
 
   function closePanels() {
-    Object.values(panels).forEach((panel) => {
-      panel.hidden = true;
-    });
+    Object.values(panels).forEach((panel) => { panel.hidden = true; });
     buttons.forEach((button) => {
       button.classList.remove("is-active");
       button.setAttribute("aria-pressed", "false");
@@ -29,24 +26,34 @@
   buttons.forEach((button) => {
     button.setAttribute("aria-pressed", "false");
     button.addEventListener("click", () => {
-      const selectedView = button.dataset.view;
-      const selectedPanel = panels[selectedView];
-      if (!selectedPanel) return;
+      const view = button.dataset.view;
+      const panel = panels[view];
+      if (!panel) return;
 
-      const alreadyOpen = !selectedPanel.hidden && button.classList.contains("is-active");
+      const isAlreadyOpen = !panel.hidden && button.classList.contains("is-active");
       closePanels();
-      if (alreadyOpen) return;
+      if (isAlreadyOpen) return;
 
-      selectedPanel.hidden = false;
+      panel.hidden = false;
       button.classList.add("is-active");
       button.setAttribute("aria-pressed", "true");
       button.setAttribute("aria-expanded", "true");
 
-      selectedPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+      // 商品按鈕直接定位到表單，不必先滑過介紹影片與商品卡片。
+      const target = view === "products"
+        ? document.getElementById("custom-order")
+        : panel;
+
+      requestAnimationFrame(() => {
+        (target || panel).scrollIntoView({ behavior: "smooth", block: "start" });
+        if (view === "products") {
+          document.getElementById("custom-order-heading")?.focus({ preventScroll: true });
+        }
+      });
     });
   });
 
-  // 使用者切換回影視作品分類時，收合服務項目的展開內容。
+  // 切回影視作品分類時，收合服務展開內容。
   document.querySelectorAll(".works-filters .filter-button").forEach((button) => {
     button.addEventListener("click", closePanels);
   });
