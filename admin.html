@@ -150,6 +150,151 @@
       color: #eee;
     }
 
+    .admin-modules {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 22px;
+      margin-top: 32px;
+    }
+
+    .admin-module {
+      border: 1px solid #303030;
+      background: #0d0e10;
+      padding: 22px;
+      border-radius: 5px;
+    }
+
+    .admin-module h2 {
+      margin: 0 0 8px;
+      font-size: 21px;
+    }
+
+    .module-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .module-toolbar button,
+    .record-actions button,
+    .ticket-open-button,
+    .reply-form button {
+      margin-top: 0;
+      background: transparent;
+      color: #fff;
+      border: 1px solid #555;
+      padding: 9px 13px;
+    }
+
+    .record-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .record-card {
+      border: 1px solid #303030;
+      background: #111214;
+      padding: 16px;
+      border-radius: 4px;
+      min-width: 0;
+    }
+
+    .record-card h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      overflow-wrap: anywhere;
+    }
+
+    .record-card p {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      line-height: 1.7;
+      color: #ddd;
+    }
+
+    .record-meta {
+      color: #999;
+      font-size: 12px;
+      line-height: 1.7;
+      overflow-wrap: anywhere;
+    }
+
+    .record-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .record-actions button.danger {
+      border-color: #8f5555;
+      color: #ffcaca;
+    }
+
+    .status-pill {
+      display: inline-block;
+      padding: 3px 8px;
+      border: 1px solid #555;
+      border-radius: 20px;
+      color: #ddd;
+      font-size: 11px;
+      margin-left: 6px;
+    }
+
+    .ticket-detail {
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px solid #454545;
+      background: #08090b;
+    }
+
+    .ticket-detail textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 12px;
+      background: #08090b;
+      color: #fff;
+      border: 1px solid #444;
+      resize: vertical;
+      font: inherit;
+    }
+
+    .ticket-detail select {
+      padding: 9px;
+      background: #08090b;
+      color: #fff;
+      border: 1px solid #555;
+    }
+
+    .order-status-select {
+      max-width: 220px;
+      padding: 9px;
+      color: #fff;
+      background: #08090b;
+      border: 1px solid #555;
+    }
+
+    .reply-item {
+      border-left: 2px solid #777;
+      padding: 9px 12px;
+      margin: 10px 0;
+      background: #111214;
+    }
+
+    .reply-item.admin-reply {
+      border-left-color: #9bbbd6;
+    }
+
+    .empty-state {
+      color: #999;
+      padding: 14px 0;
+      font-size: 13px;
+    }
+
     footer {
       text-align: center;
       color: #666;
@@ -365,6 +510,22 @@
       </p>
 
       <div class="table-wrap">
+      <!-- 後台影片分類篩選 -->
+<div class="admin-film-filters" role="group" aria-label="影片分類篩選">
+    <button
+        type="button"
+        class="admin-film-filter is-active"
+        data-admin-filter="all">
+        全部影片
+    </button>
+
+    <button
+        type="button"
+        class="admin-film-filter"
+        data-admin-filter="shorts">
+        Shorts 短影音
+    </button>
+</div>  
         <table>
           <thead>
             <tr>
@@ -378,6 +539,68 @@
 
           <tbody id="films-list"></tbody>
         </table>
+      </div>
+
+      <!-- 留言板與客服中心管理 -->
+      <div class="admin-modules">
+        <section class="admin-module" aria-labelledby="messages-heading">
+          <h2 id="messages-heading">留言板管理</h2>
+          <p class="subtitle">檢視新留言、核准公開、隱藏或刪除不適當留言。</p>
+          <div class="module-toolbar">
+            <span class="subtitle" id="messages-count" aria-live="polite">尚未載入留言</span>
+            <button type="button" id="messages-refresh">重新整理留言</button>
+          </div>
+          <div class="record-list" id="messages-list" aria-live="polite">
+            <p class="empty-state">登入管理員後載入留言。</p>
+          </div>
+        </section>
+
+        <section class="admin-module" aria-labelledby="tickets-heading">
+          <h2 id="tickets-heading">客服案件管理</h2>
+          <p class="subtitle">查看會員案件、更新處理狀態，並在案件內回覆。</p>
+          <div class="module-toolbar">
+            <span class="subtitle" id="tickets-count" aria-live="polite">尚未載入客服案件</span>
+            <button type="button" id="tickets-refresh">重新整理案件</button>
+          </div>
+          <div class="record-list" id="tickets-list" aria-live="polite">
+            <p class="empty-state">登入管理員後載入客服案件。</p>
+          </div>
+
+          <div class="ticket-detail" id="ticket-detail" hidden>
+            <h3 id="ticket-detail-title">客服案件</h3>
+            <p class="record-meta" id="ticket-detail-meta"></p>
+            <p id="ticket-detail-message"></p>
+            <label for="ticket-status">案件狀態</label>
+            <select id="ticket-status">
+              <option value="open">待處理</option>
+              <option value="in_progress">處理中</option>
+              <option value="resolved">已解決</option>
+              <option value="closed">已結案</option>
+            </select>
+            <h3 style="margin-top:22px;">對話紀錄</h3>
+            <div id="ticket-replies">
+              <p class="empty-state">尚無對話。</p>
+            </div>
+            <form class="reply-form" id="admin-reply-form">
+              <label for="admin-reply-text">回覆會員</label>
+              <textarea id="admin-reply-text" maxlength="5000" required placeholder="輸入客服回覆內容"></textarea>
+              <button type="submit" id="admin-reply-button">送出回覆</button>
+              <p class="message" id="admin-reply-message" aria-live="polite"></p>
+            </form>
+          </div>
+        </section>
+
+        <section class="admin-module" aria-labelledby="custom-orders-heading">
+          <h2 id="custom-orders-heading">客製化商品訂單</h2>
+          <p class="subtitle">查看客戶訂購需求、聯絡資料、規格與配送方式，並更新訂單處理狀態。</p>
+          <div class="module-toolbar">
+            <span class="subtitle" id="custom-orders-count" aria-live="polite">尚未載入訂單</span>
+            <button type="button" id="custom-orders-refresh">重新整理訂單</button>
+          </div>
+          <div class="record-list" id="custom-orders-list" aria-live="polite">
+            <p class="empty-state">登入管理員後載入客製化商品訂單。</p>
+          </div>
+        </section>
       </div>
 
     </section>
@@ -411,6 +634,8 @@
     const adminMessage = document.getElementById("admin-message");
     const filmsList = document.getElementById("films-list");
     let editingFilmId = null;
+    let currentAdminId = null;
+    let activeTicketId = null;
 
 // =====================================
 // 三氏影視：封面圖片直接上傳 Supabase
@@ -627,8 +852,8 @@ if (coverFileInput && coverUrlInput && coverUploadMessage) {
 
         const user = userData.user;
 
-        // 必須是 app_metadata 中的 admin
-        if (user.app_metadata?.user_role !== "admin") {
+        // 必須是 app_metadata.role 中的 admin（與資料庫設定一致）
+        if (user.app_metadata?.role !== "admin") {
           await supabaseClient.auth.signOut();
 
           throw new Error("此帳號沒有管理員權限。");
@@ -637,11 +862,13 @@ if (coverFileInput && coverUrlInput && coverUploadMessage) {
         loginPanel.hidden = true;
         dashboardPanel.hidden = false;
 
+        currentAdminId = user.id;
         adminEmail.textContent =
-          "管理員帳號：" + (user.email || "");
+          "管理員帳號：" + (user.email || "管理員");
 
-        // 讀取影片資料
+        // 保留原本影片管理，並載入留言與客服資料
         await loadFilms();
+        await Promise.all([loadMessages(), loadTickets(), loadCustomOrders()]);
 
       } catch (error) {
         loginMessage.textContent =
@@ -656,7 +883,7 @@ if (coverFileInput && coverUrlInput && coverUploadMessage) {
 
 
     // 讀取 Supabase 影片清單
-    async function loadFilms() {
+   async function loadFilms() {
 
       adminMessage.textContent = "正在讀取影片資料……";
       filmsList.replaceChildren();
@@ -683,11 +910,12 @@ if (coverFileInput && coverUrlInput && coverUploadMessage) {
 
       data.forEach((film) => {
         const row = document.createElement("tr");
-
+        row.dataset.category = film.category || "";
         const categoryNames = {
           film: "電影預告",
           short: "短片故事",
-          music: "音樂 MV"
+          music: "音樂 MV",
+          shorts: "Shorts 短影音"  
         };
 
         const values = [
@@ -748,7 +976,33 @@ row.appendChild(actionCell);
       adminMessage.textContent =
         "成功讀取 " + data.length + " 部影片。";
     }
+// 後台影片分類篩選功能
+const adminFilmFilterButtons = document.querySelectorAll(
+    ".admin-film-filter"
+);
 
+adminFilmFilterButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+        const selectedCategory = button.dataset.adminFilter;
+
+        // 更新按鈕外觀
+        adminFilmFilterButtons.forEach((item) => {
+            const isActive = item === button;
+
+            item.classList.toggle("is-active", isActive);
+            item.setAttribute("aria-pressed", String(isActive));
+        });
+
+        // 顯示全部影片或只顯示 Shorts
+        const filmRows = document.querySelectorAll("#films-list tr");
+
+        filmRows.forEach((row) => {
+            row.hidden =
+                selectedCategory !== "all" &&
+                row.dataset.category !== selectedCategory;
+        });
+    });
+});
 // ======================================
 // 新增影片至 Supabase 資料庫
 // ======================================
@@ -847,6 +1101,424 @@ coverUploadMessage.textContent = "";
 });
 
 
+    // =====================================
+    // 留言板管理
+    // =====================================
+    const messagesList = document.getElementById("messages-list");
+    const messagesCount = document.getElementById("messages-count");
+    const ticketsList = document.getElementById("tickets-list");
+    const ticketsCount = document.getElementById("tickets-count");
+    const customOrdersList = document.getElementById("custom-orders-list");
+    const customOrdersCount = document.getElementById("custom-orders-count");
+    const ticketDetail = document.getElementById("ticket-detail");
+    const ticketReplies = document.getElementById("ticket-replies");
+
+    function formatAdminDate(value) {
+      if (!value) return "時間未提供";
+      const date = new Date(value);
+      return Number.isNaN(date.getTime()) ? String(value) : date.toLocaleString("zh-TW");
+    }
+
+    function makeAdminButton(label, onClick, className = "") {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = label;
+      if (className) button.className = className;
+      button.addEventListener("click", onClick);
+      return button;
+    }
+
+    async function loadMessages() {
+      messagesCount.textContent = "正在讀取留言……";
+      messagesList.replaceChildren();
+
+      const { data, error } = await supabaseClient
+        .from("message_board")
+        .select("id, display_name, content, status, created_at")
+        .order("created_at", { ascending: false })
+        .limit(100);
+
+      if (error) {
+        messagesCount.textContent = "留言讀取失敗";
+        const message = document.createElement("p");
+        message.className = "empty-state";
+        message.textContent = error.message;
+        messagesList.appendChild(message);
+        console.error("Load messages error:", error);
+        return;
+      }
+
+      messagesCount.textContent = `共 ${data.length} 則留言（最多顯示最新 100 則）`;
+      if (!data.length) {
+        const empty = document.createElement("p");
+        empty.className = "empty-state";
+        empty.textContent = "目前沒有留言。";
+        messagesList.appendChild(empty);
+        return;
+      }
+
+      const statusNames = { pending: "待審核", approved: "已核准", hidden: "已隱藏" };
+      data.forEach((item) => {
+        const card = document.createElement("article");
+        card.className = "record-card";
+
+        const heading = document.createElement("h3");
+        heading.textContent = item.display_name || "訪客";
+        const status = document.createElement("span");
+        status.className = "status-pill";
+        status.textContent = statusNames[item.status] || item.status;
+        heading.appendChild(status);
+
+        const meta = document.createElement("div");
+        meta.className = "record-meta";
+        meta.textContent = formatAdminDate(item.created_at);
+
+        const content = document.createElement("p");
+        content.textContent = item.content || "";
+
+        const actions = document.createElement("div");
+        actions.className = "record-actions";
+
+        if (item.status !== "approved") {
+          actions.appendChild(makeAdminButton("核准公開", async () => {
+            await changeMessageStatus(item.id, "approved");
+          }));
+        }
+        if (item.status !== "hidden") {
+          actions.appendChild(makeAdminButton("隱藏留言", async () => {
+            await changeMessageStatus(item.id, "hidden");
+          }));
+        }
+        actions.appendChild(makeAdminButton("刪除", async () => {
+          if (!window.confirm("確定要永久刪除這則留言嗎？")) return;
+          const { error: deleteError } = await supabaseClient
+            .from("message_board")
+            .delete()
+            .eq("id", item.id);
+          if (deleteError) {
+            window.alert("刪除失敗：" + deleteError.message);
+            return;
+          }
+          await loadMessages();
+        }, "danger"));
+
+        card.append(heading, meta, content, actions);
+        messagesList.appendChild(card);
+      });
+    }
+
+    async function changeMessageStatus(messageId, status) {
+      const { error } = await supabaseClient
+        .from("message_board")
+        .update({ status })
+        .eq("id", messageId);
+      if (error) {
+        window.alert("留言狀態更新失敗：" + error.message);
+        return;
+      }
+      await loadMessages();
+    }
+
+    // =====================================
+    // 客服案件與對話管理
+    // =====================================
+    const ticketStatusNames = {
+      open: "待處理",
+      in_progress: "處理中",
+      resolved: "已解決",
+      closed: "已結案"
+    };
+    const ticketCategoryNames = {
+      account: "帳號問題",
+      website: "網站使用問題",
+      technical: "技術／影片問題",
+      order: "訂單問題",
+      suggestion: "合作／建議",
+      other: "其他問題"
+    };
+
+    async function loadTickets() {
+      ticketsCount.textContent = "正在讀取客服案件……";
+      ticketsList.replaceChildren();
+
+      const { data, error } = await supabaseClient
+        .from("support_tickets")
+        .select("id, ticket_no, contact_name, contact_email, subject, category, initial_message, status, priority, created_at, updated_at")
+        .order("created_at", { ascending: false })
+        .limit(100);
+
+      if (error) {
+        ticketsCount.textContent = "客服案件讀取失敗";
+        const message = document.createElement("p");
+        message.className = "empty-state";
+        message.textContent = error.message;
+        ticketsList.appendChild(message);
+        console.error("Load tickets error:", error);
+        return;
+      }
+
+      ticketsCount.textContent = `共 ${data.length} 件客服案件（最多顯示最新 100 件）`;
+      if (!data.length) {
+        const empty = document.createElement("p");
+        empty.className = "empty-state";
+        empty.textContent = "目前沒有客服案件。";
+        ticketsList.appendChild(empty);
+        return;
+      }
+
+      data.forEach((ticket) => {
+        const card = document.createElement("article");
+        card.className = "record-card";
+
+        const heading = document.createElement("h3");
+        heading.textContent = `${ticket.ticket_no || "未編號案件"}｜${ticket.subject || "未命名問題"}`;
+        const status = document.createElement("span");
+        status.className = "status-pill";
+        status.textContent = ticketStatusNames[ticket.status] || ticket.status;
+        heading.appendChild(status);
+
+        const meta = document.createElement("div");
+        meta.className = "record-meta";
+        meta.textContent = `${ticket.contact_name || "未提供稱呼"} · ${ticket.contact_email || "未提供 Email"} · ${ticketCategoryNames[ticket.category] || ticket.category} · ${formatAdminDate(ticket.created_at)}`;
+
+        const preview = document.createElement("p");
+        preview.textContent = ticket.initial_message || "";
+
+        const actions = document.createElement("div");
+        actions.className = "record-actions";
+        actions.appendChild(makeAdminButton("查看案件與回覆", async () => {
+          await openTicket(ticket);
+        }));
+
+        card.append(heading, meta, preview, actions);
+        ticketsList.appendChild(card);
+      });
+    }
+
+    // =====================================
+    // 客製化商品訂單管理
+    // =====================================
+    const orderStatusNames = {
+      pending: "待確認",
+      reviewing: "需求確認中",
+      quoted: "已報價",
+      confirmed: "已確認",
+      in_production: "製作中",
+      shipped: "已寄出／交付",
+      completed: "已完成",
+      cancelled: "已取消"
+    };
+    const orderCategoryNames = {
+      photocard: "小卡／收藏卡",
+      poster: "海報／掛報",
+      keychain: "鑰匙圈",
+      badge: "胸章",
+      bookmark: "書卡／書籤",
+      fan_goods: "其他應援／客製周邊",
+      other: "其他客製商品"
+    };
+    const deliveryMethodNames = {
+      shipping: "宅配／寄送",
+      pickup: "面交／自取",
+      discuss: "尚未決定"
+    };
+
+    async function loadCustomOrders() {
+      customOrdersCount.textContent = "正在讀取客製化商品訂單……";
+      customOrdersList.replaceChildren();
+
+      const { data, error } = await supabaseClient
+        .from("custom_product_orders")
+        .select("id, order_no, customer_name, customer_phone, customer_email, line_id, product_category, product_name, quantity, product_specification, customization_details, reference_url, delivery_method, delivery_address, budget_note, status, created_at")
+        .order("created_at", { ascending: false })
+        .limit(100);
+
+      if (error) {
+        customOrdersCount.textContent = "訂單讀取失敗";
+        const message = document.createElement("p");
+        message.className = "empty-state";
+        message.textContent = "請確認已執行 custom_product_orders 資料表 SQL，並檢查 RLS 權限。錯誤：" + error.message;
+        customOrdersList.appendChild(message);
+        console.error("Load custom product orders error:", error);
+        return;
+      }
+
+      customOrdersCount.textContent = `共 ${data.length} 筆客製化商品訂單（最多顯示最新 100 筆）`;
+      if (!data.length) {
+        const empty = document.createElement("p");
+        empty.className = "empty-state";
+        empty.textContent = "目前沒有客製化商品訂單。";
+        customOrdersList.appendChild(empty);
+        return;
+      }
+
+      data.forEach((order) => {
+        const card = document.createElement("article");
+        card.className = "record-card";
+
+        const heading = document.createElement("h3");
+        heading.textContent = `${order.order_no || "未編號訂單"}｜${order.product_name || "未命名商品"}`;
+        const statusBadge = document.createElement("span");
+        statusBadge.className = "status-pill";
+        statusBadge.textContent = orderStatusNames[order.status] || order.status;
+        heading.appendChild(statusBadge);
+
+        const contact = document.createElement("p");
+        contact.className = "record-meta";
+        contact.textContent = `訂購人：${order.customer_name || "未提供"} · 電話：${order.customer_phone || "未提供"} · Email：${order.customer_email || "未提供"} · LINE：${order.line_id || "未提供"}`;
+
+        const product = document.createElement("p");
+        product.textContent = `商品類別：${orderCategoryNames[order.product_category] || order.product_category}｜數量：${order.quantity}｜規格：${order.product_specification || "未指定"}`;
+
+        const details = document.createElement("p");
+        details.textContent = `客製需求：${order.customization_details || "未提供"}`;
+
+        const delivery = document.createElement("p");
+        delivery.textContent = `交付方式：${deliveryMethodNames[order.delivery_method] || order.delivery_method}｜地址／取貨說明：${order.delivery_address || "尚未提供"}`;
+
+        const budget = document.createElement("p");
+        budget.textContent = `預算備註：${order.budget_note || "未提供"}｜參考網址：${order.reference_url || "未提供"}`;
+
+        const meta = document.createElement("div");
+        meta.className = "record-meta";
+        meta.textContent = `建立時間：${formatAdminDate(order.created_at)}`;
+
+        const controls = document.createElement("div");
+        controls.className = "record-actions";
+        const statusSelect = document.createElement("select");
+        statusSelect.className = "order-status-select";
+        statusSelect.setAttribute("aria-label", `更新訂單 ${order.order_no} 狀態`);
+        Object.entries(orderStatusNames).forEach(([value, label]) => {
+          const option = document.createElement("option");
+          option.value = value;
+          option.textContent = label;
+          option.selected = value === order.status;
+          statusSelect.appendChild(option);
+        });
+        const updateButton = makeAdminButton("更新訂單狀態", async () => {
+          updateButton.disabled = true;
+          const { error: updateError } = await supabaseClient
+            .from("custom_product_orders")
+            .update({ status: statusSelect.value })
+            .eq("id", order.id);
+          updateButton.disabled = false;
+          if (updateError) {
+            window.alert("訂單狀態更新失敗：" + updateError.message);
+            return;
+          }
+          await loadCustomOrders();
+        });
+        controls.append(statusSelect, updateButton);
+
+        card.append(heading, contact, product, details, delivery, budget, meta, controls);
+        customOrdersList.appendChild(card);
+      });
+    }
+
+    async function openTicket(ticket) {
+      activeTicketId = ticket.id;
+      ticketDetail.hidden = false;
+      document.getElementById("ticket-detail-title").textContent =
+        `${ticket.ticket_no || "客服案件"}｜${ticket.subject || "未命名問題"}`;
+      document.getElementById("ticket-detail-meta").textContent =
+        `${ticket.contact_name || "未提供稱呼"} · ${ticket.contact_email || "未提供 Email"} · ${ticketCategoryNames[ticket.category] || ticket.category} · 建立時間：${formatAdminDate(ticket.created_at)}`;
+      document.getElementById("ticket-detail-message").textContent = ticket.initial_message || "";
+      document.getElementById("ticket-status").value = ticket.status || "open";
+      document.getElementById("admin-reply-message").textContent = "";
+      await loadTicketReplies(ticket.id);
+      ticketDetail.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    async function loadTicketReplies(ticketId) {
+      ticketReplies.replaceChildren();
+      const { data, error } = await supabaseClient
+        .from("support_replies")
+        .select("id, sender_type, message, created_at")
+        .eq("ticket_id", ticketId)
+        .order("created_at", { ascending: true });
+
+      if (error) {
+        const item = document.createElement("p");
+        item.className = "empty-state";
+        item.textContent = "對話讀取失敗：" + error.message;
+        ticketReplies.appendChild(item);
+        return;
+      }
+
+      if (!data.length) {
+        const empty = document.createElement("p");
+        empty.className = "empty-state";
+        empty.textContent = "目前尚無後續對話。";
+        ticketReplies.appendChild(empty);
+        return;
+      }
+
+      data.forEach((reply) => {
+        const item = document.createElement("div");
+        item.className = "reply-item" + (reply.sender_type === "admin" ? " admin-reply" : "");
+        const label = document.createElement("strong");
+        label.textContent = reply.sender_type === "admin" ? "三氏影視客服" : "會員／訪客";
+        const meta = document.createElement("div");
+        meta.className = "record-meta";
+        meta.textContent = formatAdminDate(reply.created_at);
+        const content = document.createElement("p");
+        content.textContent = reply.message || "";
+        item.append(label, meta, content);
+        ticketReplies.appendChild(item);
+      });
+    }
+
+    document.getElementById("messages-refresh").addEventListener("click", loadMessages);
+    document.getElementById("tickets-refresh").addEventListener("click", loadTickets);
+    document.getElementById("custom-orders-refresh").addEventListener("click", loadCustomOrders);
+
+    document.getElementById("ticket-status").addEventListener("change", async (event) => {
+      if (!activeTicketId) return;
+      const { error } = await supabaseClient
+        .from("support_tickets")
+        .update({ status: event.target.value })
+        .eq("id", activeTicketId);
+      if (error) {
+        window.alert("案件狀態更新失敗：" + error.message);
+        return;
+      }
+      await loadTickets();
+    });
+
+    document.getElementById("admin-reply-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const button = document.getElementById("admin-reply-button");
+      const messageInput = document.getElementById("admin-reply-text");
+      const feedback = document.getElementById("admin-reply-message");
+      const message = messageInput.value.trim();
+
+      if (!activeTicketId || !currentAdminId || !message) {
+        feedback.textContent = "請先選擇案件並輸入回覆內容。";
+        return;
+      }
+
+      button.disabled = true;
+      feedback.textContent = "正在送出回覆……";
+      const { error } = await supabaseClient
+        .from("support_replies")
+        .insert({
+          ticket_id: activeTicketId,
+          user_id: currentAdminId,
+          sender_type: "admin",
+          message
+        });
+      button.disabled = false;
+
+      if (error) {
+        feedback.textContent = "回覆失敗：" + error.message;
+        return;
+      }
+
+      messageInput.value = "";
+      feedback.textContent = "回覆已送出。";
+      await loadTicketReplies(activeTicketId);
+    });
+
     // 管理員登出
     document.getElementById("logout-button")
       .addEventListener("click", async () => {
@@ -861,6 +1533,9 @@ coverUploadMessage.textContent = "";
 
         dashboardPanel.hidden = true;
         loginPanel.hidden = false;
+        ticketDetail.hidden = true;
+        currentAdminId = null;
+        activeTicketId = null;
         loginForm.reset();
         loginMessage.textContent = "已安全登出。";
       });

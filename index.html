@@ -7,6 +7,177 @@
   <meta name="theme-color" content="#050505">
   <title>三氏影視｜把故事拍成值得記住的畫面</title>
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* 三氏影視｜留言板與客服中心補充樣式 */
+    .guestbook-form,
+    .customer-service-form,
+    .customer-ticket-reply-form {
+      display: grid;
+      gap: 10px;
+    }
+    .guestbook-form input,
+    .guestbook-form textarea,
+    .customer-service-form input,
+    .customer-service-form select,
+    .customer-service-form textarea,
+    .customer-ticket-reply-form textarea {
+      width: 100%;
+      max-width: 100%;
+      padding: 12px 14px;
+      color: #f5f5f5;
+      background: #0b0c0e;
+      border: 1px solid #454545;
+      border-radius: 3px;
+      font: inherit;
+    }
+    .guestbook-form button,
+    .customer-service-form button,
+    .customer-ticket-reply-form button {
+      justify-self: start;
+      padding: 11px 20px;
+      color: #111;
+      background: #f5f5f5;
+      border: 1px solid #f5f5f5;
+      cursor: pointer;
+    }
+    .guestbook-form button:disabled,
+    .customer-service-form button:disabled,
+    .customer-ticket-reply-form button:disabled {
+      opacity: .55;
+      cursor: wait;
+    }
+    #guestbook-list,
+    #customer-ticket-history {
+      display: grid;
+      gap: 12px;
+      margin-top: 22px;
+    }
+    .guestbook-entry,
+    .customer-ticket-card {
+      padding: 16px;
+      color: #ededed;
+      background: #101113;
+      border: 1px solid #303236;
+      border-radius: 4px;
+      overflow-wrap: anywhere;
+    }
+    .guestbook-entry__name,
+    .customer-ticket-card h4 {
+      margin: 0 0 8px;
+    }
+    .guestbook-entry__date,
+    .customer-ticket-card small {
+      color: #999;
+      font-size: 12px;
+    }
+    .guestbook-entry__content,
+    .customer-ticket-card p,
+    .customer-ticket-reply p {
+      white-space: pre-wrap;
+      line-height: 1.7;
+    }
+    .customer-ticket-conversation {
+      display: grid;
+      gap: 8px;
+      margin: 14px 0;
+    }
+    .customer-ticket-reply {
+      padding: 10px 12px;
+      border-left: 2px solid #777;
+      background: #17191c;
+    }
+    .customer-ticket-reply p {
+      margin-bottom: 0;
+    }
+
+    /* 客製化商品訂購表單 */
+    .custom-order-panel {
+      margin-top: 34px;
+      padding: clamp(18px, 3vw, 30px);
+      background: #101113;
+      border: 1px solid #303236;
+      border-radius: 5px;
+    }
+    .custom-order-panel > h3 { margin-top: 0; }
+    .custom-order-form {
+      display: grid;
+      gap: 10px;
+      margin-top: 22px;
+    }
+    .custom-order-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .custom-order-field { min-width: 0; }
+    .custom-order-field--full { grid-column: 1 / -1; }
+    .custom-order-form label {
+      display: block;
+      margin: 8px 0;
+      color: #d6d6d6;
+      font-size: 13px;
+    }
+    .custom-order-form input,
+    .custom-order-form select,
+    .custom-order-form textarea {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      min-height: 45px;
+      padding: 12px 14px;
+      color: #f5f5f5;
+      background: #08090b;
+      border: 1px solid #454545;
+      border-radius: 3px;
+      font: inherit;
+    }
+    .custom-order-form textarea { min-height: 115px; resize: vertical; }
+    .custom-order-form input:focus,
+    .custom-order-form select:focus,
+    .custom-order-form textarea:focus {
+      outline: 2px solid #9bbbd6;
+      outline-offset: 1px;
+    }
+    .custom-order-form .custom-order-consent {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 10px 0;
+      color: #c5c5c5;
+      line-height: 1.7;
+    }
+    .custom-order-form .custom-order-consent input {
+      width: 18px;
+      min-height: 18px;
+      margin-top: 3px;
+      flex: 0 0 auto;
+    }
+    .custom-order-form button {
+      justify-self: start;
+      padding: 12px 24px;
+      color: #111;
+      background: #f5f5f5;
+      border: 1px solid #f5f5f5;
+      cursor: pointer;
+    }
+    .custom-order-form button:disabled { opacity: .55; cursor: wait; }
+    .custom-order-help, #custom-order-message { color: #aaa; font-size: 13px; line-height: 1.8; }
+    #custom-order-history { display: grid; gap: 12px; margin-top: 22px; }
+    .custom-order-history-card {
+      padding: 14px 16px;
+      background: #17191c;
+      border: 1px solid #373a3f;
+      border-radius: 4px;
+      overflow-wrap: anywhere;
+    }
+    .custom-order-history-card p { margin: 6px 0; line-height: 1.7; }
+    .custom-order-history-card small { color: #999; }
+    @media (max-width: 620px) {
+      .custom-order-grid { grid-template-columns: 1fr; }
+      .custom-order-field--full { grid-column: auto; }
+      .custom-order-form button { width: 100%; }
+    }
+  </style>
 </head>
 <body>
   <!-- 頁首：LOGO 與網站導覽 -->
@@ -25,6 +196,8 @@
       <a href="#services">服務項目</a>
       <a href="#works">影視作品</a>
       <a class="nav-contact" href="#contact">聯絡我們</a>
+      <a href="#guestbook">留言板</a>
+      <a href="#customer-service">客服中心</a>
     </nav>
   </header>
 
@@ -365,6 +538,100 @@
     </div>
 
 </div>
+
+    <!-- 客製化商品購買／訂購需求表單 -->
+    <section class="custom-order-panel" id="custom-order" aria-labelledby="custom-order-heading">
+      <p class="section-kicker">CUSTOM ORDER</p>
+      <h3 id="custom-order-heading">客製化商品訂購表單</h3>
+      <p class="custom-order-help">
+        請填寫商品款式、數量與客製需求。送出後會建立「待確認」訂單，三氏影視確認規格、報價及交期後，再與您聯絡；此表單不會直接扣款。
+      </p>
+
+      <form class="custom-order-form" id="custom-order-form">
+        <div class="custom-order-grid">
+          <div class="custom-order-field">
+            <label for="order-customer-name">訂購人姓名／稱呼 *</label>
+            <input id="order-customer-name" name="customer_name" type="text" maxlength="80" autocomplete="name" required placeholder="請填寫姓名或稱呼">
+          </div>
+          <div class="custom-order-field">
+            <label for="order-customer-phone">聯絡電話 *</label>
+            <input id="order-customer-phone" name="customer_phone" type="tel" maxlength="40" autocomplete="tel" required placeholder="例如：0912-345-678">
+          </div>
+          <div class="custom-order-field">
+            <label for="order-customer-email">電子郵件 *</label>
+            <input id="order-customer-email" name="customer_email" type="email" maxlength="254" autocomplete="email" required placeholder="example@email.com">
+          </div>
+          <div class="custom-order-field">
+            <label for="order-line-id">LINE ID（選填）</label>
+            <input id="order-line-id" name="line_id" type="text" maxlength="100" placeholder="方便客服聯絡您的 LINE ID">
+          </div>
+          <div class="custom-order-field">
+            <label for="order-product-category">商品類別 *</label>
+            <select id="order-product-category" name="product_category" required>
+              <option value="">請選擇商品類別</option>
+              <option value="photocard">小卡／收藏卡</option>
+              <option value="poster">海報／掛報</option>
+              <option value="keychain">鑰匙圈</option>
+              <option value="badge">胸章</option>
+              <option value="bookmark">書卡／書籤</option>
+              <option value="fan_goods">其他應援／客製周邊</option>
+              <option value="other">其他客製商品</option>
+            </select>
+          </div>
+          <div class="custom-order-field">
+            <label for="order-product-name">商品名稱／款式 *</label>
+            <input id="order-product-name" name="product_name" type="text" maxlength="160" required placeholder="例如：客製化雙面小卡">
+          </div>
+          <div class="custom-order-field">
+            <label for="order-quantity">訂購數量 *</label>
+            <input id="order-quantity" name="quantity" type="number" min="1" max="999" step="1" value="1" required>
+          </div>
+          <div class="custom-order-field">
+            <label for="order-specification">尺寸／材質／規格（選填）</label>
+            <input id="order-specification" name="product_specification" type="text" maxlength="500" placeholder="例如：9 × 6.7 cm、霧膜、雙面印刷">
+          </div>
+          <div class="custom-order-field">
+            <label for="order-delivery-method">希望的交付方式 *</label>
+            <select id="order-delivery-method" name="delivery_method" required>
+              <option value="">請選擇交付方式</option>
+              <option value="shipping">宅配／寄送</option>
+              <option value="pickup">面交／自取</option>
+              <option value="discuss">尚未決定，請客服聯絡</option>
+            </select>
+          </div>
+          <div class="custom-order-field">
+            <label for="order-budget-note">預算或預計單價（選填）</label>
+            <input id="order-budget-note" name="budget_note" type="text" maxlength="160" placeholder="例如：希望控制在 NT$ 1,000 內">
+          </div>
+          <div class="custom-order-field custom-order-field--full">
+            <label for="order-customization-details">客製內容／圖案需求 *</label>
+            <textarea id="order-customization-details" name="customization_details" maxlength="3000" required placeholder="請描述圖案、文字、顏色、印刷方式、包裝需求或其他客製細節。請勿在此填寫密碼或金融卡資料。"></textarea>
+          </div>
+          <div class="custom-order-field custom-order-field--full">
+            <label for="order-reference-url">參考圖片／設計稿網址（選填）</label>
+            <input id="order-reference-url" name="reference_url" type="url" maxlength="1000" placeholder="https://...">
+          </div>
+          <div class="custom-order-field custom-order-field--full">
+            <label for="order-delivery-address">收件地址或取貨說明（選填；確認寄送方式後再提供也可以）</label>
+            <input id="order-delivery-address" name="delivery_address" type="text" maxlength="500" autocomplete="street-address" placeholder="尚未確定可先留白">
+          </div>
+        </div>
+
+        <label class="custom-order-consent" for="order-confirmation">
+          <input id="order-confirmation" name="confirmation" type="checkbox" required>
+          <span>我確認以上資料正確，並了解本表單是訂購需求登記；送出不代表付款完成或訂單已正式成立，需待三氏影視確認報價、交期及交付方式後才成立。</span>
+        </label>
+
+        <button type="submit" id="custom-order-submit">送出客製化商品訂購需求</button>
+        <p id="custom-order-message" aria-live="polite"></p>
+      </form>
+
+      <div id="custom-order-history" aria-live="polite">
+        <h4>我的訂購紀錄</h4>
+        <p class="custom-order-help">送出訂購需求後，會在此瀏覽目前瀏覽器工作階段中的訂單狀態。</p>
+      </div>
+      <p class="custom-order-help">提醒：目前訂單與此瀏覽器的 Supabase 工作階段關聯。清除瀏覽資料、登出或更換裝置後，可能無法再查看原紀錄。請保留送出後顯示的訂單編號。</p>
+    </section>
 </div>
 
 <!-- 課程教學展示區 -->
@@ -439,6 +706,109 @@
       <p>三氏影視聯絡資訊即將在下一階段加入。</p>
       <a class="button button-light" href="#home">回到首頁 ↑</a>
     </section>
+    <!-- 留言板 -->
+<section class="contact-section" id="guestbook">
+    <p class="section-kicker">05 - GUESTBOOK</p>
+    <h2>觀眾留言板</h2>
+    <p>歡迎分享觀影心得、創作建議與想對三氏影視說的話。</p>
+
+    <form class="guestbook-form" id="guestbook-form">
+        <label for="guestbook-name">留言暱稱</label>
+        <input
+            id="guestbook-name"
+            type="text"
+            maxlength="80"
+            placeholder="請輸入你的暱稱"
+            required
+        >
+
+        <label for="guestbook-content">留言內容</label>
+        <textarea
+            id="guestbook-content"
+            rows="5"
+            maxlength="1000"
+            placeholder="分享你的想法……"
+            required
+        ></textarea>
+
+        <button type="submit" id="guestbook-submit">送出留言</button>
+        <p id="guestbook-message" class="content-note" aria-live="polite"></p>
+    </form>
+
+    <div id="guestbook-list">
+        <p>觀眾留言將顯示在這裡。</p>
+    </div>
+</section>
+<!-- 客服中心 -->
+<section class="contact-section" id="customer-service">
+    <p class="section-kicker">06 - CUSTOMER SERVICE</p>
+    <h2>三氏影視客服中心</h2>
+    <p>有任何問題、合作需求或網站使用上的疑問，歡迎聯絡我們。</p>
+
+    <form class="customer-service-form" id="customer-service-form">
+
+        <label for="customer-name">您的稱呼</label>
+        <input
+            id="customer-name"
+            type="text"
+            maxlength="80"
+            placeholder="請輸入您的稱呼"
+            required
+        >
+
+        <label for="customer-email">聯絡電子郵件</label>
+        <input
+            id="customer-email"
+            type="email"
+            maxlength="254"
+            placeholder="example@email.com"
+            required
+        >
+
+        <label for="customer-subject">問題標題</label>
+        <input
+            id="customer-subject"
+            type="text"
+            maxlength="200"
+            placeholder="簡短描述您遇到的問題"
+            required
+        >
+
+        <label for="customer-category">問題類別</label>
+        <select id="customer-category">
+            <option value="">請選擇問題類別</option>
+            <option value="website">網站使用問題</option>
+            <option value="video">影片播放問題</option>
+            <option value="cooperation">商業合作洽詢</option>
+            <option value="other">其他問題</option>
+        </select>
+
+        <label for="customer-message">問題內容</label>
+        <textarea
+            id="customer-message"
+            rows="5"
+            maxlength="2000"
+            placeholder="請描述您遇到的問題……"
+            required
+        ></textarea>
+
+        <button type="submit" id="customer-service-submit">送出客服案件</button>
+        <p id="customer-service-message" class="content-note" aria-live="polite"></p>
+    </form>
+
+    <div id="customer-ticket-history" class="customer-ticket-history" aria-live="polite">
+        <h3>我的客服案件</h3>
+        <p>送出客服案件後，可在此瀏覽目前瀏覽器工作階段中的案件與回覆。</p>
+    </div>
+
+    <p class="content-note">提醒：客服案件以此瀏覽器的訪客工作階段關聯。請保留案件編號；若清除瀏覽資料、登出或更換裝置，可能無法再查看原案件。</p>
+
+    <div class="customer-service-faq">
+        <h3>常見問題 FAQ</h3>
+        <p>影片無法播放？請先確認網路連線及 YouTube 影片是否可以正常開啟。</p>
+        <p>有商業合作需求？歡迎透過客服中心提出洽詢。</p>
+    </div>
+</section>
   </main>
 
   <footer class="site-footer">
@@ -509,5 +879,7 @@
 <script src="js/supabase-client.js"></script>
   <script src="js/script.js"></script>
   <script src="js/supabase-films.js"></script>
+  <script src="js/supabase-support.js"></script>
+  <script src="js/supabase-orders.js"></script>
 </body>
 </html>
