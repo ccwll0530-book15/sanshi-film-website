@@ -177,6 +177,33 @@
       .custom-order-field--full { grid-column: auto; }
       .custom-order-form button { width: 100%; }
     }
+
+    /* 服務項目中的客製化商品／課程教學入口 */
+    .service-card-action {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .service-card-action .extra-category-button {
+      margin-top: auto;
+      min-height: 42px;
+      padding: 10px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.48);
+      border-radius: 2px;
+      color: #f2f2f2;
+      background: rgba(255, 255, 255, 0.03);
+      text-align: center;
+      letter-spacing: 0.06em;
+    }
+    .service-card-action .extra-category-button:hover,
+    .service-card-action .extra-category-button.is-active {
+      color: #111;
+      background: #f5f5f5;
+      border-color: #f5f5f5;
+    }
+    .services-section .extra-content-panel {
+      scroll-margin-top: 110px;
+    }
   </style>
 </head>
 <body>
@@ -284,17 +311,6 @@
         aria-pressed="false">
     Shorts 短影音
 </button>
-        <button class="extra-category-button"
-                type="button"
-                data-view="products">
-            客製化商品
-        </button>
-
-        <button class="extra-category-button"
-                type="button"
-                data-view="courses">
-            課程教學
-        </button>
 </div>
 <div class="works-search">
   <label for="work-search">搜尋影視作品</label>
@@ -476,7 +492,77 @@
 
 
       </div>
-<!-- 客製化商品展示區 -->
+      <p class="content-note">三氏影視作品展示，持續收錄影像企劃、短片與預告內容。</p>
+    </section>    <!-- 品牌介紹 -->
+<section class="hero" id="story">
+    <div class="hero-copy">
+        <p class="eyebrow"><span class="eyebrow-line"></span> SANSHI FILM · VISUAL STORYTELLING</p>
+        <h1>用影像說故事<br><span>讓每一個畫面都值得珍藏。</span></h1>
+        <p class="hero-description">
+          從靈感、企劃到影像呈現，讓每一個想法都有自己的舞台。<br>
+          這裡是三氏影視的全新起點。
+        </p>
+        <div class="hero-actions">
+          <a class="button button-light" href="#works">探索影視作品 <span aria-hidden="true">↗</span></a>
+          <a class="button button-outline" href="#about">認識三氏影視</a>
+        </div>
+        <p class="hero-note">影像企劃　／　拍攝製作　／　後期剪輯</p>
+      </div>
+
+      <div class="hero-art" aria-label="電影感抽象視覺裝飾" role="img">
+        <div class="art-glow"></div>
+        <div class="art-frame art-frame-back"></div>
+        <div class="art-frame art-frame-front">
+          <div class="frame-topline"><span>SF / 001</span><span>STORY IN MOTION</span></div>
+          <div class="frame-mark"> <img src="assets/sanshi-logo-white.png" alt="三氏影視 LOGO"></div>
+          <div class="frame-bottomline"><span>三氏影視</span><span>EST. 2026</span></div>
+        </div>
+        <div class="art-caption">BEHIND EVERY FRAME, THERE IS A STORY.</div>
+      </div>
+      <div class="hero-index" aria-hidden="true">01 / 04</div>
+    </section>
+</section>    <section class="section about-section" id="about">
+      <div class="section-heading">
+        <p class="section-kicker">01 — ABOUT US</p>
+        <h2>關於三氏影視</h2>
+      </div>
+      <div class="about-content">
+        <p class="about-lead">每一個故事，都值得被好好呈現。</p>
+        <p class="about-text">三氏影視是一個以影像與故事為核心的創作品牌。從這個網站開始，我們將逐步整理品牌介紹、創作理念、服務內容與影視作品，讓觀眾認識每一段影像背後的想法。</p>
+      </div>
+    </section>
+
+    <!-- 服務項目：目前為第一版示意內容 -->
+    <section class="section services-section" id="services">
+      <div class="section-heading section-heading-row">
+        <div><p class="section-kicker">02 — WHAT WE DO</p><h2>服務項目</h2></div>
+        <p class="section-side-note">從構想到成品，打造完整的影像體驗。</p>
+      </div>
+      <div class="service-grid">
+        <article class="service-card"><span class="card-number">01</span><div class="service-symbol">✳</div><h3>影像企劃</h3><p>整理創意、主題與敘事方向，讓想法成為清晰的影像計畫。</p><span class="card-en">CONCEPT & PLANNING</span></article>
+        <article class="service-card"><span class="card-number">02</span><div class="service-symbol">◉</div><h3>拍攝製作</h3><p>以鏡頭記錄人物、品牌與故事，呈現每個值得被看見的瞬間。</p><span class="card-en">FILM PRODUCTION</span></article>
+        <article class="service-card"><span class="card-number">03</span><div class="service-symbol">▤</div><h3>後期剪輯</h3><p>透過剪輯、節奏與聲音設計，完成影像的最後一段旅程。</p><span class="card-en">POST-PRODUCTION</span></article>
+        <article class="service-card service-card-action">
+          <span class="card-number">04</span>
+          <div class="service-symbol" aria-hidden="true">▣</div>
+          <h3>客製化商品</h3>
+          <p>小卡、海報、鑰匙圈及各式收藏與應援周邊，提供客製規格與訂購需求登記。</p>
+          <button class="extra-category-button" type="button" data-view="products" aria-controls="custom-products-view" aria-expanded="false">查看商品與訂購</button>
+          <span class="card-en">CUSTOM PRODUCTS</span>
+        </article>
+        <article class="service-card service-card-action">
+          <span class="card-number">05</span>
+          <div class="service-symbol" aria-hidden="true">▤</div>
+          <h3>課程教學</h3>
+          <p>整理影像創作、AI 工具與網站製作等教學內容，逐步推出實用課程。</p>
+          <button class="extra-category-button" type="button" data-view="courses" aria-controls="courses-view" aria-expanded="false">查看課程教學</button>
+          <span class="card-en">COURSES & TUTORIALS</span>
+        </article>
+      </div>
+      <p class="content-note">選擇「客製化商品」查看商品介紹並填寫訂購需求，或進入「課程教學」查看課程內容。</p>
+
+      <!-- 商品與課程內容已整合至服務項目 -->
+      <!-- 客製化商品展示區 -->
 <div class="extra-content-panel" id="custom-products-view" hidden>
     <h3>客製化商品</h3>
     <p>客製化商品展示區</p>
@@ -643,58 +729,8 @@
         <p>課程資料尚未加入，後續將在此展示課程圖片、名稱及介紹。</p>
     </div>
 </div>
-      <p class="content-note">三氏影視作品展示，持續收錄影像企劃、短片與預告內容。</p>
-    </section>    <!-- 品牌介紹 -->
-<section class="hero" id="story">
-    <div class="hero-copy">
-        <p class="eyebrow"><span class="eyebrow-line"></span> SANSHI FILM · VISUAL STORYTELLING</p>
-        <h1>用影像說故事<br><span>讓每一個畫面都值得珍藏。</span></h1>
-        <p class="hero-description">
-          從靈感、企劃到影像呈現，讓每一個想法都有自己的舞台。<br>
-          這裡是三氏影視的全新起點。
-        </p>
-        <div class="hero-actions">
-          <a class="button button-light" href="#works">探索影視作品 <span aria-hidden="true">↗</span></a>
-          <a class="button button-outline" href="#about">認識三氏影視</a>
-        </div>
-        <p class="hero-note">影像企劃　／　拍攝製作　／　後期剪輯</p>
-      </div>
 
-      <div class="hero-art" aria-label="電影感抽象視覺裝飾" role="img">
-        <div class="art-glow"></div>
-        <div class="art-frame art-frame-back"></div>
-        <div class="art-frame art-frame-front">
-          <div class="frame-topline"><span>SF / 001</span><span>STORY IN MOTION</span></div>
-          <div class="frame-mark"> <img src="assets/sanshi-logo-white.png" alt="三氏影視 LOGO"></div>
-          <div class="frame-bottomline"><span>三氏影視</span><span>EST. 2026</span></div>
-        </div>
-        <div class="art-caption">BEHIND EVERY FRAME, THERE IS A STORY.</div>
-      </div>
-      <div class="hero-index" aria-hidden="true">01 / 04</div>
-    </section>
-</section>    <section class="section about-section" id="about">
-      <div class="section-heading">
-        <p class="section-kicker">01 — ABOUT US</p>
-        <h2>關於三氏影視</h2>
-      </div>
-      <div class="about-content">
-        <p class="about-lead">每一個故事，都值得被好好呈現。</p>
-        <p class="about-text">三氏影視是一個以影像與故事為核心的創作品牌。從這個網站開始，我們將逐步整理品牌介紹、創作理念、服務內容與影視作品，讓觀眾認識每一段影像背後的想法。</p>
-      </div>
-    </section>
 
-    <!-- 服務項目：目前為第一版示意內容 -->
-    <section class="section services-section" id="services">
-      <div class="section-heading section-heading-row">
-        <div><p class="section-kicker">02 — WHAT WE DO</p><h2>服務項目</h2></div>
-        <p class="section-side-note">從構想到成品，打造完整的影像體驗。</p>
-      </div>
-      <div class="service-grid">
-        <article class="service-card"><span class="card-number">01</span><div class="service-symbol">✳</div><h3>影像企劃</h3><p>整理創意、主題與敘事方向，讓想法成為清晰的影像計畫。</p><span class="card-en">CONCEPT & PLANNING</span></article>
-        <article class="service-card"><span class="card-number">02</span><div class="service-symbol">◉</div><h3>拍攝製作</h3><p>以鏡頭記錄人物、品牌與故事，呈現每個值得被看見的瞬間。</p><span class="card-en">FILM PRODUCTION</span></article>
-        <article class="service-card"><span class="card-number">03</span><div class="service-symbol">▤</div><h3>後期剪輯</h3><p>透過剪輯、節奏與聲音設計，完成影像的最後一段旅程。</p><span class="card-en">POST-PRODUCTION</span></article>
-      </div>
-      <p class="content-note">以上為網站第一版示意分類，正式服務項目可再依實際業務調整。</p>
     </section>
 
 
@@ -881,5 +917,6 @@
   <script src="js/supabase-films.js"></script>
   <script src="js/supabase-support.js"></script>
   <script src="js/supabase-orders.js"></script>
+  <script src="js/service-categories.js"></script>
 </body>
 </html>
