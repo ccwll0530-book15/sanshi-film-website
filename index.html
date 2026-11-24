@@ -204,6 +204,12 @@
     .services-section .extra-content-panel {
       scroll-margin-top: 110px;
     }
+    .services-section .extra-content-panel[hidden] {
+      display: none !important;
+    }
+    #custom-order {
+      scroll-margin-top: 110px;
+    }
   </style>
 </head>
 <body>
@@ -566,69 +572,11 @@
 <div class="extra-content-panel" id="custom-products-view" hidden>
     <h3>客製化商品</h3>
     <p>客製化商品展示區</p>
-<!-- 第一支客製化商品介紹影片 -->
-<div class="custom-product-video">
-    <h4>客製化商品介紹影片 01</h4>
-
-    <div class="custom-product-video-frame">
-        <iframe
-            src="https://www.youtube.com/embed/cs0tF9Lq7sw"
-            title="三氏影視｜客製化商品介紹影片 01"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen>
-        </iframe>
-    </div>
-</div>
-    <!-- 第二支客製化商品介紹影片 -->
-<div class="custom-product-video">
-    <h4>客製化商品介紹影片 02</h4>
-
-    <div class="custom-product-video-frame">
-        <iframe
-            src="https://www.youtube.com/embed/JcnxeGTKkdc?list=PLKH6r62iimG8"
-            title="三氏影視｜客製化商品介紹影片 02"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen>
-        </iframe>
-    </div>
-</div>
-    <div class="extra-content-grid" id="custom-products-list">
-
-    <!-- 客製化商品卡片範本 -->
-    <div class="product-card">
-
-        <div class="product-card-image">
-            <span>商品圖片待上傳</span>
-        </div>
-
-        <div class="product-card-info">
-
-            <span class="product-card-category">客製化商品</span>
-
-            <h4 class="product-card-title">
-                商品名稱待設定
-            </h4>
-
-            <p class="product-card-description">
-                請填入商品介紹、尺寸及客製化規格。
-            </p>
-
-            <div class="product-card-price">
-                價格待設定
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
 
     <!-- 客製化商品購買／訂購需求表單 -->
     <section class="custom-order-panel" id="custom-order" aria-labelledby="custom-order-heading">
       <p class="section-kicker">CUSTOM ORDER</p>
-      <h3 id="custom-order-heading">客製化商品訂購表單</h3>
+      <h3 id="custom-order-heading" tabindex="-1">客製化商品訂購表單</h3>
       <p class="custom-order-help">
         請填寫商品款式、數量與客製需求。送出後會建立「待確認」訂單，三氏影視確認規格、報價及交期後，再與您聯絡；此表單不會直接扣款。
       </p>
@@ -718,6 +666,66 @@
       </div>
       <p class="custom-order-help">提醒：目前訂單與此瀏覽器的 Supabase 工作階段關聯。清除瀏覽資料、登出或更換裝置後，可能無法再查看原紀錄。請保留送出後顯示的訂單編號。</p>
     </section>
+
+<!-- 第一支客製化商品介紹影片 -->
+<div class="custom-product-video">
+    <h4>客製化商品介紹影片 01</h4>
+
+    <div class="custom-product-video-frame">
+        <iframe
+            src="https://www.youtube.com/embed/cs0tF9Lq7sw"
+            title="三氏影視｜客製化商品介紹影片 01"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+        </iframe>
+    </div>
+</div>
+    <!-- 第二支客製化商品介紹影片 -->
+<div class="custom-product-video">
+    <h4>客製化商品介紹影片 02</h4>
+
+    <div class="custom-product-video-frame">
+        <iframe
+            src="https://www.youtube.com/embed/JcnxeGTKkdc?list=PLKH6r62iimG8"
+            title="三氏影視｜客製化商品介紹影片 02"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+        </iframe>
+    </div>
+</div>
+    <div class="extra-content-grid" id="custom-products-list">
+
+    <!-- 客製化商品卡片範本 -->
+    <div class="product-card">
+
+        <div class="product-card-image">
+            <span>商品圖片待上傳</span>
+        </div>
+
+        <div class="product-card-info">
+
+            <span class="product-card-category">客製化商品</span>
+
+            <h4 class="product-card-title">
+                商品名稱待設定
+            </h4>
+
+            <p class="product-card-description">
+                請填入商品介紹、尺寸及客製化規格。
+            </p>
+
+            <div class="product-card-price">
+                價格待設定
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
 </div>
 
 <!-- 課程教學展示區 -->
