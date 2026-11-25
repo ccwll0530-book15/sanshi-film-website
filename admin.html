@@ -1699,7 +1699,7 @@ coverUploadMessage.textContent = "";
 
       const { data, error } = await supabaseClient
         .from("member_profiles")
-        .select("id, member_no, email, email_confirmed_at, full_name, phone, line_id, member_status, created_at")
+        .select("id, member_no, email, email_confirmed_at, full_name, phone, line_id, birth_date, member_status, created_at")
         .eq("account_role", "member")
         .eq("is_anonymous", false)
         .order("created_at", { ascending: false })
@@ -1731,7 +1731,7 @@ coverUploadMessage.textContent = "";
         const email = document.createElement("p");
         email.textContent = `Email：${member.email || "未提供"}｜驗證：${member.email_confirmed_at ? "已驗證" : "尚未驗證"}`;
         const contacts = document.createElement("p");
-        contacts.textContent = `電話：${member.phone || "未提供"}｜LINE：${member.line_id || "未提供"}`;
+        contacts.textContent = `電話：${member.phone || "未提供"}｜LINE：${member.line_id || "未提供"}｜生日：${member.birth_date || "未提供"}`;
         const meta = document.createElement("p");
         meta.className = "record-meta";
         meta.textContent = `註冊時間：${formatAdminDate(member.created_at)}｜會員狀態：${member.member_status === "suspended" ? "已停用" : "正常"}`;
