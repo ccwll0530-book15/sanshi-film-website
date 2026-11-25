@@ -216,6 +216,10 @@
       color: #ddd;
     }
 
+    .member-admin-toolbar-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .member-admin-toolbar-actions a { display: inline-block; padding: 9px 13px; color: #fff; border: 1px solid #555; text-decoration: none; font-size: 13px; }
+    .member-admin-toolbar-actions a:hover { background: #1b1d20; }
+    .member-status-select { min-width: 145px; padding: 9px 10px; color: #fff; background: #08090b; border: 1px solid #555; }
     .record-meta {
       color: #999;
       font-size: 12px;
@@ -683,6 +687,22 @@
           </div>
         </section>
 
+
+        <section class="admin-module" aria-labelledby="members-heading">
+          <h2 id="members-heading">會員管理</h2>
+          <p class="subtitle">查看已註冊會員、Email 驗證狀態，並啟用或停用會員的網站資料存取權限。</p>
+          <div class="module-toolbar">
+            <span class="subtitle" id="members-count" aria-live="polite">尚未載入會員</span>
+            <div class="member-admin-toolbar-actions">
+              <button type="button" id="members-refresh">重新整理會員</button>
+              <a href="https://supabase.com/dashboard/project/wwqiinioziuettprnskfg/auth/users" target="_blank" rel="noopener noreferrer">在 Supabase 新增／邀請會員</a>
+            </div>
+          </div>
+          <p class="record-meta">新增會員請選擇 Supabase Authentication → Users → Add user → Send invitation。新帳號建立後，系統會自動建立會員資料，再回到本頁管理。</p>
+          <div class="record-list" id="members-list" aria-live="polite">
+            <p class="empty-state">登入管理員後載入會員。</p>
+          </div>
+        </section>
         <section class="admin-module" aria-labelledby="custom-orders-heading">
           <h2 id="custom-orders-heading">客製化商品訂單</h2>
           <p class="subtitle">查看客戶訂購需求、聯絡資料、規格與配送方式，並更新訂單處理狀態。</p>
@@ -961,7 +981,7 @@ if (coverFileInput && coverUrlInput && coverUploadMessage) {
 
         // 保留原本影片管理，並載入留言與客服資料
         await loadFilms();
-        await Promise.all([loadMessages(), loadTickets(), loadCustomOrders()]);
+        await Promise.all([loadMessages(), loadTickets(), loadCustomOrders(), loadMembers()]);
 
       } catch (error) {
         loginMessage.textContent =
@@ -1203,6 +1223,8 @@ coverUploadMessage.textContent = "";
     const ticketsCount = document.getElementById("tickets-count");
     const customOrdersList = document.getElementById("custom-orders-list");
     const customOrdersCount = document.getElementById("custom-orders-count");
+    const membersList = document.getElementById("members-list");
+    const membersCount = document.getElementById("members-count");
     const ticketDetail = document.getElementById("ticket-detail");
     const ticketReplies = document.getElementById("ticket-replies");
 
@@ -1670,6 +1692,87 @@ coverUploadMessage.textContent = "";
       });
     }
 
+    async function loadMembers() {
+      if (!membersList || !membersCount) return;
+      membersCount.textContent = "正在讀取會員……";
+      membersList.replaceChildren();
+
+      const { data, error } = await supabaseClient
+        .from("member_profiles")
+        .select("id, member_no, email, email_confirmed_at, full_name, phone, line_id, member_status, created_at")
+        .eq("account_role", "member")
+        .eq("is_anonymous", false)
+        .order("created_at", { ascending: false })
+        .limit(300);
+
+      if (error) {
+        membersCount.textContent = "會員讀取失敗";
+        const item = document.createElement("p");
+        item.className = "empty-state";
+        item.textContent = error.message + "。請確認已執行會員系統 SQL。";
+        membersList.appendChild(item);
+        return;
+      }
+
+      membersCount.textContent = `共 ${data.length} 位會員`;
+      if (!data.length) {
+        const empty = document.createElement("p");
+        empty.className = "empty-state";
+        empty.textContent = "目前尚無已註冊會員。可使用上方「在 Supabase 新增／邀請會員」建立新帳號。";
+        membersList.appendChild(empty);
+        return;
+      }
+
+      data.forEach((member) => {
+        const card = document.createElement("article");
+        card.className = "record-card";
+        const title = document.createElement("h3");
+        title.textContent = `${member.member_no || "會員"}｜${member.full_name || "尚未填寫姓名"}`;
+        const email = document.createElement("p");
+        email.textContent = `Email：${member.email || "未提供"}｜驗證：${member.email_confirmed_at ? "已驗證" : "尚未驗證"}`;
+        const contacts = document.createElement("p");
+        contacts.textContent = `電話：${member.phone || "未提供"}｜LINE：${member.line_id || "未提供"}`;
+        const meta = document.createElement("p");
+        meta.className = "record-meta";
+        meta.textContent = `註冊時間：${formatAdminDate(member.created_at)}｜會員狀態：${member.member_status === "suspended" ? "已停用" : "正常"}`;
+
+        const controls = document.createElement("div");
+        controls.className = "record-actions";
+        const statusSelect = document.createElement("select");
+        statusSelect.className = "member-status-select";
+        statusSelect.setAttribute("aria-label", `設定會員 ${member.email || member.member_no} 狀態`);
+        [["active", "正常／啟用"], ["suspended", "停用會員"]].forEach(([value, label]) => {
+          const option = document.createElement("option");
+          option.value = value;
+          option.textContent = label;
+          option.selected = value === member.member_status;
+          statusSelect.appendChild(option);
+        });
+        const updateButton = makeAdminButton("更新會員狀態", async () => {
+          const nextStatus = statusSelect.value;
+          if (nextStatus === "suspended" && !window.confirm(`確定停用會員 ${member.email || member.member_no}？停用後將無法讀取或新增客製化商品訂單。`)) return;
+          updateButton.disabled = true;
+          const { data: updated, error: updateError } = await supabaseClient.rpc("admin_set_member_status", {
+            p_user_id: member.id,
+            p_status: nextStatus
+          });
+          updateButton.disabled = false;
+          if (updateError) {
+            window.alert("會員狀態更新失敗：" + updateError.message);
+            return;
+          }
+          if (!updated) {
+            window.alert("會員狀態未更新，請重新整理後再試。管理員帳號不能由此功能停用。");
+            return;
+          }
+          await loadMembers();
+        });
+        controls.append(statusSelect, updateButton);
+        card.append(title, email, contacts, meta, controls);
+        membersList.appendChild(card);
+      });
+    }
+
     async function openTicket(ticket) {
       activeTicketId = ticket.id;
       ticketDetail.hidden = false;
@@ -1726,6 +1829,7 @@ coverUploadMessage.textContent = "";
     document.getElementById("messages-refresh").addEventListener("click", loadMessages);
     document.getElementById("tickets-refresh").addEventListener("click", loadTickets);
     document.getElementById("custom-orders-refresh").addEventListener("click", loadCustomOrders);
+    document.getElementById("members-refresh").addEventListener("click", loadMembers);
 
     document.getElementById("ticket-status").addEventListener("change", async (event) => {
       if (!activeTicketId) return;
