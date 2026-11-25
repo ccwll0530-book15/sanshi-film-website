@@ -886,6 +886,11 @@
   <h2>三氏影視會員中心</h2>
   <p>註冊會員後，可使用同一個帳號查看自己的客製化商品訂單、報價及後續服務紀錄。</p>
 
+  <div id="member-admin-notice" class="member-card" hidden aria-live="polite">
+    <h3>目前登入的是管理員帳號</h3>
+    <p>會員登入與註冊表單仍會顯示。為保護管理員工作階段，管理員登入時不能直接提交一般會員登入／註冊；請使用未登入管理員的瀏覽器或無痕視窗進行顧客測試。</p>
+  </div>
+
   <div id="member-auth-panel">
     <div class="member-center-grid">
       <article class="member-card">
@@ -913,10 +918,11 @@
           <input id="member-line-id" type="text" maxlength="100" placeholder="方便客服聯絡您的 LINE ID">
           <div id="member-register-password-fields">
             <label for="member-register-password">設定密碼 *</label>
-            <input id="member-register-password" type="password" minlength="8" autocomplete="new-password" placeholder="至少 8 個字元">
-            <label for="member-register-password-confirm">再次輸入密碼 *</label>
-            <input id="member-register-password-confirm" type="password" minlength="8" autocomplete="new-password" placeholder="再次輸入密碼">
+            <input id="member-register-password" type="password" minlength="8" autocomplete="new-password" required placeholder="至少 8 個字元">
           </div>
+          <label for="member-birth-date">生日（選填）</label>
+          <input id="member-birth-date" type="date" autocomplete="bday" aria-describedby="member-birth-date-hint">
+          <small id="member-birth-date-hint" class="member-help">生日僅用於會員資料與服務聯繫，可留空。</small>
           <button id="member-register-submit" type="submit">註冊會員</button>
         </form>
         <p class="member-help" id="member-register-hint">註冊後請先完成 Email 驗證，再使用會員帳號登入。</p>
@@ -939,6 +945,8 @@
       <input id="member-profile-phone" type="tel" maxlength="40">
       <label for="member-profile-line">LINE ID（選填）</label>
       <input id="member-profile-line" type="text" maxlength="100">
+      <label for="member-profile-birth-date">生日（選填）</label>
+      <input id="member-profile-birth-date" type="date" autocomplete="bday">
       <button type="submit">儲存會員資料</button>
       <p id="member-profile-message" aria-live="polite"></p>
     </form>
