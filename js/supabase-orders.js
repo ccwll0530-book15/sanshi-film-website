@@ -221,4 +221,18 @@
     }
     if (data.session?.user) loadMyOrders(data.session.user.id);
   });
+
+  // 若顧客在同一頁面稍後才登入／註冊，重新載入該會員自己的訂單紀錄。
+  // 延後執行，避免在 Supabase Auth callback 內直接呼叫其他 Auth 操作。
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (event === "SIGNED_IN" && session?.user) {
+      window.setTimeout(() => loadMyOrders(session.user.id), 0);
+    }
+    if (event === "SIGNED_OUT") {
+      history.replaceChildren(
+        makeNode("h4", "", "我的訂購紀錄"),
+        makeNode("p", "custom-order-help", "登入會員後，可在此查看該會員帳號的訂單；訪客訂單請保留原訂單編號。")
+      );
+    }
+  });
 })();
