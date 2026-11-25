@@ -148,7 +148,21 @@
       if (error) throw error;
 
       form.reset();
-      message.textContent = `訂購需求已送出！訂單編號：${data.order_no}。目前狀態：待確認。請保留此編號，三氏影視確認報價與交期後會與您聯絡。`;
+      message.replaceChildren();
+      message.appendChild(document.createTextNode(
+        `訂購需求已送出！訂單編號：${data.order_no}。目前狀態：待確認。請保留此編號。`
+      ));
+      const lineFollowUp = document.createElement("p");
+      lineFollowUp.className = "custom-order-help";
+      lineFollowUp.appendChild(document.createTextNode("為方便三氏影視與您確認報價及交期，請加入官方 LINE 好友，並傳送您的訂單編號："));
+      const lineLink = document.createElement("a");
+      lineLink.href = "https://line.me/R/ti/p/@016amvbv";
+      lineLink.target = "_blank";
+      lineLink.rel = "noopener noreferrer";
+      lineLink.className = "line-official-link";
+      lineLink.textContent = "加入三氏影視 LINE 官方帳號";
+      lineFollowUp.appendChild(lineLink);
+      message.appendChild(lineFollowUp);
       await loadMyOrders(user.id);
     } catch (error) {
       console.error("Custom product order submit error:", error);
