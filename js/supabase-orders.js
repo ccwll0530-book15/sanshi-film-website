@@ -72,7 +72,7 @@
 
     const { data, error } = await supabase
       .from("custom_product_orders")
-      .select("order_no, product_name, product_category, quantity, status, created_at")
+      .select("id, order_no, product_name, product_category, quantity, status, quote_amount, estimated_production_days, quote_note, quoted_at, customer_confirmed_at, created_at")
       .eq("user_id", userId)
       .order("created_at", { ascending: false })
       .limit(20);
@@ -92,7 +92,48 @@
       const detail = makeNode("p", "", `類別：${categoryNames[order.product_category] || order.product_category}　數量：${order.quantity}`);
       const status = makeNode("p", "", `目前狀態：${statusNames[order.status] || order.status}`);
       const date = makeNode("small", "", `送出時間：${formatDate(order.created_at)}`);
-      card.append(title, detail, status, date);
+      card.append(title, detail, status);
+
+      if (order.quote_amount !== null && order.quote_amount !== undefined) {
+        const quoteAmount = new Intl.NumberFormat("zh-TW", {
+          style: "currency", currency: "TWD", maximumFractionDigits: 0
+        }).format(Number(order.quote_amount));
+        const quote = makeNode("div", "custom-order-quote");
+        quote.appendChild(makeNode("strong", "", `三氏影視報價：${quoteAmount}`));
+        quote.appendChild(makeNode("p", "", `預估製作天數：${order.estimated_production_days || "未提供"} 天`));
+        quote.appendChild(makeNode("p", "", `報價備註：${order.quote_note || "無"}`));
+        if (order.quoted_at) quote.appendChild(makeNode("small", "", `報價時間：${formatDate(order.quoted_at)}`));
+        card.appendChild(quote);
+
+        if (order.status === "quoted") {
+          const confirmButton = makeNode("button", "", "確認此報價並成立訂單");
+          confirmButton.type = "button";
+          confirmButton.addEventListener("click", async () => {
+            const accepted = window.confirm(`確認接受訂單 ${order.order_no} 的報價 ${quoteAmount} 嗎？確認後訂單狀態將改為「已確認」。`);
+            if (!accepted) return;
+            confirmButton.disabled = true;
+            status.textContent = "正在確認報價……";
+            const { data: confirmed, error: confirmError } = await supabase.rpc(
+              "confirm_custom_product_quote",
+              { p_order_id: order.id }
+            );
+            if (confirmError) {
+              confirmButton.disabled = false;
+              status.textContent = "報價確認失敗：" + confirmError.message;
+              return;
+            }
+            if (!confirmed) {
+              confirmButton.disabled = false;
+              status.textContent = "報價已失效或訂單狀態已變更，請重新整理後確認。";
+              return;
+            }
+            await loadMyOrders(userId);
+          });
+          card.appendChild(confirmButton);
+        }
+      }
+
+      card.appendChild(date);
       history.appendChild(card);
     });
   }
