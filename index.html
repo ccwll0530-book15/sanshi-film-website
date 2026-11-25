@@ -162,6 +162,8 @@
     }
     .custom-order-form button:disabled { opacity: .55; cursor: wait; }
     .custom-order-help, #custom-order-message { color: #aaa; font-size: 13px; line-height: 1.8; }
+    .line-official-link { color: #9ed6a8; text-decoration: underline; text-underline-offset: 3px; }
+    .line-official-link:hover, .line-official-link:focus { color: #c8f2cf; }
     #custom-order-history { display: grid; gap: 12px; margin-top: 22px; }
     .custom-order-history-card {
       padding: 14px 16px;
@@ -598,6 +600,7 @@
           <div class="custom-order-field">
             <label for="order-line-id">LINE ID（選填）</label>
             <input id="order-line-id" name="line_id" type="text" maxlength="100" placeholder="方便客服聯絡您的 LINE ID">
+            <p class="custom-order-help">尚未加入好友？<a class="line-official-link" href="https://line.me/R/ti/p/@016amvbv" target="_blank" rel="noopener noreferrer">加入三氏影視 LINE 官方帳號</a></p>
           </div>
           <div class="custom-order-field">
             <label for="order-product-category">商品類別 *</label>
