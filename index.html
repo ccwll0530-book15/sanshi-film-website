@@ -234,13 +234,34 @@
     #custom-order {
       scroll-margin-top: 110px;
     }
+  
+
+    /* 頁首品牌 LOGO：使用含圖形標誌與書法字樣的完整版本 */
+    .site-header .brand {
+      display: flex;
+      align-items: center;
+      flex: 0 0 auto;
+    }
+    .site-header .brand img {
+      display: block;
+      width: clamp(180px, 17vw, 230px);
+      height: auto;
+      max-height: 72px;
+      object-fit: contain;
+    }
+    @media (max-width: 700px) {
+      .site-header .brand img {
+        width: clamp(145px, 40vw, 180px);
+        max-height: 58px;
+      }
+    }
   </style>
 </head>
 <body>
   <!-- 頁首：LOGO 與網站導覽 -->
   <header class="site-header">
     <a class="brand" href="#home" aria-label="三氏影視首頁">
-      <img src="assets/sanshi-logo-white.png" alt="三氏影視 LOGO">
+      <img src="assets/sanshi-logo-header.png" alt="三氏影視完整品牌 LOGO">
     </a>
 
     <button class="menu-toggle" type="button" aria-label="開啟選單" aria-expanded="false" aria-controls="main-nav">
