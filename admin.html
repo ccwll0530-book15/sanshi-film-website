@@ -278,6 +278,99 @@
       border: 1px solid #555;
     }
 
+    .quote-editor {
+      margin-top: 16px;
+      padding: 16px;
+      border: 1px solid #3d4650;
+      background: #0b0d10;
+      border-radius: 4px;
+    }
+
+    .quote-editor h4 {
+      margin: 0 0 10px;
+      color: #e8edf2;
+      font-size: 15px;
+    }
+
+    .quote-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .quote-editor label {
+      margin: 10px 0 6px;
+    }
+
+    .quote-editor input,
+    .quote-editor textarea {
+      display: block;
+      width: 100%;
+      padding: 11px;
+      color: #fff;
+      background: #08090b;
+      border: 1px solid #444;
+      border-radius: 3px;
+      font: inherit;
+    }
+
+    .quote-editor textarea {
+      min-height: 76px;
+      resize: vertical;
+    }
+
+    .quote-editor .quote-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .quote-editor .quote-actions button,
+    .quote-editor .quote-actions a {
+      display: inline-block;
+      margin: 0;
+      padding: 9px 13px;
+      color: #fff;
+      background: transparent;
+      border: 1px solid #59636e;
+      text-decoration: none;
+      font: inherit;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .quote-editor .quote-actions button.primary {
+      color: #111;
+      background: #f5f5f5;
+      border-color: #f5f5f5;
+    }
+
+    .quote-editor .quote-message {
+      min-height: 20px;
+      margin: 10px 0 0;
+      color: #a9c6d9;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .quote-summary {
+      margin-top: 12px;
+      padding: 12px;
+      border-left: 3px solid #89b79a;
+      background: #171b1c;
+      color: #dfe9e2;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    @media (max-width: 600px) {
+      .quote-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .reply-item {
       border-left: 2px solid #777;
       padding: 9px 12px;
@@ -1296,7 +1389,7 @@ coverUploadMessage.textContent = "";
     }
 
     // =====================================
-    // 客製化商品訂單管理
+    // 客製化商品訂單管理與報價
     // =====================================
     const orderStatusNames = {
       pending: "待確認",
@@ -1323,13 +1416,34 @@ coverUploadMessage.textContent = "";
       discuss: "尚未決定"
     };
 
+    function formatTwd(value) {
+      const amount = Number(value);
+      if (!Number.isFinite(amount)) return "尚未報價";
+      return new Intl.NumberFormat("zh-TW", {
+        style: "currency", currency: "TWD", maximumFractionDigits: 0
+      }).format(amount);
+    }
+
+    function makeQuoteNotice(order, amount, days, note) {
+      const lines = [
+        "您好，這裡是三氏影視。您的客製化商品需求已完成初步報價：",
+        `訂單編號：${order.order_no}`,
+        `商品：${order.product_name || "客製化商品"}`,
+        `報價總額：${formatTwd(amount)}`,
+        `預估製作天數：${days} 天`,
+        note ? `報價備註：${note}` : "",
+        "請至三氏影視網站查看報價並確認；確認前不會開始製作。"
+      ].filter(Boolean);
+      return lines.join("\n");
+    }
+
     async function loadCustomOrders() {
       customOrdersCount.textContent = "正在讀取客製化商品訂單……";
       customOrdersList.replaceChildren();
 
       const { data, error } = await supabaseClient
         .from("custom_product_orders")
-        .select("id, order_no, customer_name, customer_phone, customer_email, line_id, product_category, product_name, quantity, product_specification, customization_details, reference_url, delivery_method, delivery_address, budget_note, status, created_at")
+        .select("id, order_no, customer_name, customer_phone, customer_email, line_id, product_category, product_name, quantity, product_specification, customization_details, reference_url, delivery_method, delivery_address, budget_note, status, quote_amount, estimated_production_days, quote_note, quoted_at, customer_confirmed_at, created_at")
         .order("created_at", { ascending: false })
         .limit(100);
 
@@ -1337,7 +1451,7 @@ coverUploadMessage.textContent = "";
         customOrdersCount.textContent = "訂單讀取失敗";
         const message = document.createElement("p");
         message.className = "empty-state";
-        message.textContent = "請確認已執行 custom_product_orders 資料表 SQL，並檢查 RLS 權限。錯誤：" + error.message;
+        message.textContent = "請先執行客製化商品報價欄位更新 SQL，再重新整理訂單。錯誤：" + error.message;
         customOrdersList.appendChild(message);
         console.error("Load custom product orders error:", error);
         return;
@@ -1365,7 +1479,7 @@ coverUploadMessage.textContent = "";
 
         const contact = document.createElement("p");
         contact.className = "record-meta";
-        contact.textContent = `訂購人：${order.customer_name || "未提供"} · 電話：${order.customer_phone || "未提供"} · Email：${order.customer_email || "未提供"} · LINE：${order.line_id || "未提供"}`;
+        contact.textContent = `訂購人：${order.customer_name || "未提供"} · 電話：${order.customer_phone || "未提供"} · Email：${order.customer_email || "未提供"} · LINE ID：${order.line_id || "未提供"}`;
 
         const product = document.createElement("p");
         product.textContent = `商品類別：${orderCategoryNames[order.product_category] || order.product_category}｜數量：${order.quantity}｜規格：${order.product_specification || "未指定"}`;
@@ -1383,6 +1497,143 @@ coverUploadMessage.textContent = "";
         meta.className = "record-meta";
         meta.textContent = `建立時間：${formatAdminDate(order.created_at)}`;
 
+        const quoteSummary = document.createElement("div");
+        quoteSummary.className = "quote-summary";
+        if (order.quote_amount !== null && order.quote_amount !== undefined) {
+          quoteSummary.textContent = `目前報價：${formatTwd(order.quote_amount)}\n預估製作天數：${order.estimated_production_days || "未提供"} 天\n報價備註：${order.quote_note || "無"}\n報價時間：${formatAdminDate(order.quoted_at)}`;
+          if (order.customer_confirmed_at) {
+            quoteSummary.textContent += `\n顧客確認時間：${formatAdminDate(order.customer_confirmed_at)}`;
+          }
+        } else {
+          quoteSummary.textContent = "尚未建立報價。";
+        }
+
+        const quoteEditor = document.createElement("section");
+        quoteEditor.className = "quote-editor";
+        const quoteTitle = document.createElement("h4");
+        quoteTitle.textContent = "管理員報價設定";
+
+        const quoteGrid = document.createElement("div");
+        quoteGrid.className = "quote-grid";
+        const amountWrap = document.createElement("div");
+        const amountLabel = document.createElement("label");
+        amountLabel.textContent = "報價總額（新台幣）";
+        const amountInput = document.createElement("input");
+        amountInput.type = "number";
+        amountInput.min = "1";
+        amountInput.max = "99999999";
+        amountInput.step = "1";
+        amountInput.inputMode = "numeric";
+        amountInput.placeholder = "例如：1200";
+        amountInput.value = order.quote_amount ?? "";
+        amountLabel.appendChild(amountInput);
+        amountWrap.appendChild(amountLabel);
+
+        const daysWrap = document.createElement("div");
+        const daysLabel = document.createElement("label");
+        daysLabel.textContent = "預估製作天數";
+        const daysInput = document.createElement("input");
+        daysInput.type = "number";
+        daysInput.min = "1";
+        daysInput.max = "365";
+        daysInput.step = "1";
+        daysInput.inputMode = "numeric";
+        daysInput.placeholder = "例如：7";
+        daysInput.value = order.estimated_production_days ?? "";
+        daysLabel.appendChild(daysInput);
+        daysWrap.appendChild(daysLabel);
+        quoteGrid.append(amountWrap, daysWrap);
+
+        const noteLabel = document.createElement("label");
+        noteLabel.textContent = "報價備註（選填）";
+        const noteInput = document.createElement("textarea");
+        noteInput.maxLength = 1000;
+        noteInput.placeholder = "例如：含設計、印刷及基本包裝；運費另計。";
+        noteInput.value = order.quote_note || "";
+        noteLabel.appendChild(noteInput);
+
+        const quoteMessage = document.createElement("p");
+        quoteMessage.className = "quote-message";
+        quoteMessage.setAttribute("aria-live", "polite");
+
+        const quoteActions = document.createElement("div");
+        quoteActions.className = "quote-actions";
+        const isLocked = !["pending", "reviewing", "quoted"].includes(order.status);
+        [amountInput, daysInput, noteInput].forEach((input) => { input.disabled = isLocked; });
+
+        const saveQuoteButton = makeAdminButton("儲存報價並設為已報價", async () => {
+          const amount = Number(amountInput.value);
+          const days = Number(daysInput.value);
+          if (!Number.isFinite(amount) || amount <= 0 || amount > 99999999) {
+            quoteMessage.textContent = "請輸入大於 0 且不超過 99,999,999 的報價金額。";
+            amountInput.focus();
+            return;
+          }
+          if (!Number.isInteger(days) || days < 1 || days > 365) {
+            quoteMessage.textContent = "預估製作天數請輸入 1 至 365 的整數。";
+            daysInput.focus();
+            return;
+          }
+          saveQuoteButton.disabled = true;
+          quoteMessage.textContent = "正在儲存報價……";
+          const { error: quoteError } = await supabaseClient
+            .from("custom_product_orders")
+            .update({
+              quote_amount: amount,
+              estimated_production_days: days,
+              quote_note: noteInput.value.trim() || null,
+              quoted_at: new Date().toISOString(),
+              status: "quoted"
+            })
+            .eq("id", order.id);
+          saveQuoteButton.disabled = false;
+          if (quoteError) {
+            quoteMessage.textContent = "報價儲存失敗：" + quoteError.message;
+            return;
+          }
+          quoteMessage.textContent = "報價已儲存，訂單狀態已更新為「已報價」。目前尚未自動推播 LINE，請複製通知文字後手動聯絡顧客。";
+          await loadCustomOrders();
+        });
+        saveQuoteButton.className = "primary";
+        saveQuoteButton.disabled = isLocked;
+
+        const copyQuoteButton = makeAdminButton("複製 LINE 報價通知文字", async () => {
+          const amount = Number(amountInput.value || order.quote_amount);
+          const days = Number(daysInput.value || order.estimated_production_days);
+          if (!Number.isFinite(amount) || amount <= 0 || !Number.isInteger(days) || days < 1) {
+            quoteMessage.textContent = "請先填寫有效報價及製作天數，或先儲存既有報價。";
+            return;
+          }
+          const messageText = makeQuoteNotice(order, amount, days, noteInput.value.trim() || order.quote_note || "");
+          try {
+            await navigator.clipboard.writeText(messageText);
+            quoteMessage.textContent = "LINE 通知文字已複製。請開啟官方 LINE，確認顧客身分後再貼上傳送。";
+          } catch (error) {
+            quoteMessage.textContent = "瀏覽器未允許自動複製，請改用手動複製以下文字。";
+            const manualText = document.createElement("textarea");
+            manualText.value = messageText;
+            manualText.readOnly = true;
+            manualText.style.width = "100%";
+            manualText.style.minHeight = "120px";
+            quoteEditor.appendChild(manualText);
+            manualText.focus();
+            manualText.select();
+          }
+        });
+        const lineLink = document.createElement("a");
+        lineLink.href = "https://line.me/R/ti/p/@016amvbv";
+        lineLink.target = "_blank";
+        lineLink.rel = "noopener noreferrer";
+        lineLink.textContent = "開啟三氏影視 LINE 官方帳號";
+        if (isLocked) {
+          copyQuoteButton.disabled = true;
+          lineLink.setAttribute("aria-disabled", "true");
+          lineLink.style.opacity = ".45";
+          lineLink.style.pointerEvents = "none";
+        }
+        quoteActions.append(saveQuoteButton, copyQuoteButton, lineLink);
+        quoteEditor.append(quoteTitle, quoteSummary, quoteGrid, noteLabel, quoteActions, quoteMessage);
+
         const controls = document.createElement("div");
         controls.className = "record-actions";
         const statusSelect = document.createElement("select");
@@ -1396,6 +1647,10 @@ coverUploadMessage.textContent = "";
           statusSelect.appendChild(option);
         });
         const updateButton = makeAdminButton("更新訂單狀態", async () => {
+          if (statusSelect.value === "quoted" && (order.quote_amount === null || order.quote_amount === undefined)) {
+            window.alert("請先在「管理員報價設定」填寫報價總額與預估製作天數，再儲存報價。不要直接把未報價訂單改成「已報價」。");
+            return;
+          }
           updateButton.disabled = true;
           const { error: updateError } = await supabaseClient
             .from("custom_product_orders")
@@ -1410,7 +1665,7 @@ coverUploadMessage.textContent = "";
         });
         controls.append(statusSelect, updateButton);
 
-        card.append(heading, contact, product, details, delivery, budget, meta, controls);
+        card.append(heading, contact, product, details, delivery, budget, meta, quoteEditor, controls);
         customOrdersList.appendChild(card);
       });
     }
