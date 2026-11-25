@@ -9,6 +9,7 @@
   const supabase = window.sanshiSupabase;
   const authPanel = document.getElementById("member-auth-panel");
   const accountPanel = document.getElementById("member-account-panel");
+  const adminNotice = document.getElementById("member-admin-notice");
   if (!authPanel || !accountPanel) return;
 
   const message = document.getElementById("member-auth-message");
@@ -38,8 +39,9 @@
     email: document.getElementById("member-register-email"),
     phone: document.getElementById("member-phone"),
     lineId: document.getElementById("member-line-id"),
+    birthDate: document.getElementById("member-birth-date"),
+    profileBirthDate: document.getElementById("member-profile-birth-date"),
     password: document.getElementById("member-register-password"),
-    passwordConfirm: document.getElementById("member-register-password-confirm"),
     loginEmail: document.getElementById("member-login-email"),
     loginPassword: document.getElementById("member-login-password"),
     profileName: document.getElementById("member-profile-name"),
@@ -69,7 +71,7 @@
   async function fetchMyProfile(userId) {
     const { data, error } = await supabase
       .from("member_profiles")
-      .select("id, member_no, email, email_confirmed_at, full_name, phone, line_id, is_anonymous, account_role, member_status, created_at")
+      .select("id, member_no, email, email_confirmed_at, full_name, phone, line_id, birth_date, is_anonymous, account_role, member_status, created_at")
       .eq("id", userId)
       .maybeSingle();
     if (error) throw error;
@@ -82,6 +84,7 @@
     rendering = true;
     currentUser = user || null;
     currentProfile = null;
+    if (adminNotice) adminNotice.hidden = true;
 
     try {
       if (!currentUser) {
@@ -97,9 +100,12 @@
       currentProfile = profile;
 
       if (profile.account_role === "admin") {
-        authPanel.hidden = true;
+        // 管理員仍可看見會員中心版型，但禁止在管理員 Session 內提交顧客登入／註冊。
+        authPanel.hidden = false;
         accountPanel.hidden = true;
-        setMessage("此帳號為管理員，請使用管理後台，不需要在會員中心管理。", true);
+        if (adminNotice) adminNotice.hidden = false;
+        loginHint.textContent = "目前是管理員工作階段。請使用未登入管理員的瀏覽器測試顧客會員登入。";
+        registerHint.textContent = "目前是管理員工作階段。請使用未登入管理員的瀏覽器測試顧客註冊。";
         return;
       }
 
@@ -114,9 +120,9 @@
       if (currentUser.is_anonymous) {
         authPanel.hidden = false;
         accountPanel.hidden = true;
-        passwordFields.hidden = true;
+        passwordFields.hidden = false;
         loginHint.textContent = "目前瀏覽器使用訪客工作階段。若登入其他會員帳號，原訪客訂單不會自動合併。";
-        registerHint.textContent = "將目前訪客帳號連結到 Email，可保留這個帳號 ID 與此工作階段的訂單。請先啟用 Supabase 的 Allow manual linking。Email 驗證完成後，再於會員中心設定密碼。";
+        registerHint.textContent = "將目前訪客帳號連結到 Email，可保留這個帳號 ID 與此工作階段的訂單。請填寫 Email、密碼及基本資料，並完成 Email 驗證。";
         if (profile.full_name && !fields.fullName.value) fields.fullName.value = profile.full_name;
         if (profile.email) fields.email.value = profile.email;
         if (profile.phone && !fields.phone.value) fields.phone.value = profile.phone;
@@ -134,8 +140,10 @@
       fields.profileName.value = profile.full_name || "";
       fields.profilePhone.value = profile.phone || "";
       fields.profileLine.value = profile.line_id || "";
+      fields.profileBirthDate.value = profile.birth_date || "";
       setMessage("已登入三氏影視會員中心。");
     } catch (error) {
+      if (adminNotice) adminNotice.hidden = true;
       authPanel.hidden = false;
       accountPanel.hidden = true;
       setMessage("會員資料讀取失敗：" + (error.message || "請重新整理頁面。"), true);
@@ -147,6 +155,10 @@
 
   loginForm.addEventListener("submit", async (event) => {
     event.preventDefault();
+    if (currentProfile?.account_role === "admin") {
+      setMessage("目前已登入管理員帳號。請使用未登入管理員的瀏覽器測試顧客登入。", true);
+      return;
+    }
     setFormBusy(loginForm, true);
     setMessage("正在登入會員……");
     try {
@@ -166,11 +178,16 @@
 
   registerForm.addEventListener("submit", async (event) => {
     event.preventDefault();
+    if (currentProfile?.account_role === "admin") {
+      setMessage("目前已登入管理員帳號。為保護管理員 Session，請改用未登入管理員的瀏覽器註冊一般會員。", true);
+      return;
+    }
     const fullName = fields.fullName.value.trim();
     const email = fields.email.value.trim();
     const phone = fields.phone.value.trim();
     const lineId = fields.lineId.value.trim();
-    const profileData = { full_name: fullName, phone, line_id: lineId };
+    const birthDate = fields.birthDate.value || null;
+    const profileData = { full_name: fullName, phone, line_id: lineId, birth_date: birthDate };
     const isAnonymous = Boolean(currentUser?.is_anonymous);
 
     if (!fullName || fullName.length > 80) {
@@ -179,18 +196,21 @@
       return;
     }
 
-    if (!isAnonymous) {
-      const password = fields.password.value;
-      if (password.length < 8) {
-        setMessage("密碼至少需要 8 個字元。", true);
-        fields.password.focus();
+    if (birthDate) {
+      const today = new Date();
+      const todayLocal = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+      if (birthDate > todayLocal) {
+        setMessage("生日不可晚於今天。", true);
+        fields.birthDate.focus();
         return;
       }
-      if (password !== fields.passwordConfirm.value) {
-        setMessage("兩次輸入的密碼不一致。", true);
-        fields.passwordConfirm.focus();
-        return;
-      }
+    }
+
+    const password = fields.password.value;
+    if (password.length < 8) {
+      setMessage("密碼至少需要 8 個字元。", true);
+      fields.password.focus();
+      return;
     }
 
     setFormBusy(registerForm, true);
@@ -198,7 +218,7 @@
     try {
       if (isAnonymous) {
         const { error } = await supabase.auth.updateUser(
-          { email, data: profileData },
+          { email, password, data: profileData },
           { emailRedirectTo: redirectUrl() }
         );
         if (error) throw error;
@@ -230,7 +250,6 @@
       }
     } finally {
       setFormBusy(registerForm, false);
-      if (isAnonymous) passwordFields.hidden = true;
     }
   });
 
@@ -242,6 +261,14 @@
       profileMessage.textContent = "請填寫姓名／稱呼。";
       return;
     }
+    if (fields.profileBirthDate.value) {
+      const today = new Date();
+      const todayLocal = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+      if (fields.profileBirthDate.value > todayLocal) {
+        profileMessage.textContent = "生日不可晚於今天。";
+        return;
+      }
+    }
     const saveButton = profileForm.querySelector("button[type='submit']");
     saveButton.disabled = true;
     profileMessage.textContent = "正在儲存會員資料……";
@@ -249,7 +276,8 @@
       const { data, error } = await supabase.rpc("update_my_member_profile", {
         p_full_name: fullName,
         p_phone: fields.profilePhone.value.trim() || null,
-        p_line_id: fields.profileLine.value.trim() || null
+        p_line_id: fields.profileLine.value.trim() || null,
+        p_birth_date: fields.profileBirthDate.value || null
       });
       if (error) throw error;
       if (!data) throw new Error("會員資料未更新，請確認帳號狀態。 ");
